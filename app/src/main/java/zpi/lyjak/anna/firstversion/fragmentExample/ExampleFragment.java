@@ -22,10 +22,9 @@ public class ExampleFragment extends Fragment implements ScreenShotable {
     public static final String SHOP = "Shop";
     public static final String PARTY = "Party";
     public static final String MOVIE = "Movie";
-
-    private View containerView;
     protected ImageView mImageView;
     protected int res;
+    private View containerView;
     private Bitmap bitmap;
 
     //add if you need: private OnFragmentInteractionListener mListener;
@@ -66,6 +65,7 @@ public class ExampleFragment extends Fragment implements ScreenShotable {
         mImageView.setImageResource(res);
         return rootView;
     }
+
     @Override
     public void takeScreenShot() {
         Thread thread = new Thread() {

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-group='com.yalantis:sidemenu'
+group = 'com.yalantis:sidemenu'
 
 android {
     compileSdkVersion 23

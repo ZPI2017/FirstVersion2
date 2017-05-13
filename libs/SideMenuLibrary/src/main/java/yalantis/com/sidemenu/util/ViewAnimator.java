@@ -20,11 +20,10 @@ import yalantis.com.sidemenu.interfaces.ScreenShotable;
  * Created by Konstantin on 12.01.2015.
  */
 public class ViewAnimator<T extends Resourceble> {
-    private final int ANIMATION_DURATION = 175;
     public static final int CIRCULAR_REVEAL_ANIMATION_DURATION = 500;
-
+    private final int ANIMATION_DURATION = 175;
     private AppCompatActivity appCompatActivity;
-  
+
     private List<T> list;
 
     private List<View> viewList = new ArrayList<>();

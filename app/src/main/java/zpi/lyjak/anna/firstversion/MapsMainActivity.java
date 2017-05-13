@@ -1,30 +1,19 @@
 package zpi.lyjak.anna.firstversion;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,23 +26,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 /**
  * @author Anna Łyjak
+ * swaggerhub
  */
 public class MapsMainActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    public LatLng currentlatLng; //current user's LatLng
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-
     private int MY_LOCATION_REQUEST_CODE = 100; //necessary to permission // w sumie to nie wiem jaka powinna być wielkość tego czegoś... w przykładach było 100, ale jak tego nie ustawiałam, to też działało xD
-
     private Location currentLocation; //current user's location
-    public LatLng currentlatLng; //current user's LatLng
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +81,7 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
 
     /**
      * Getter for this activity
+     *
      * @return this activity
      */
     public Activity getActivity() {
@@ -129,16 +117,16 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     /**
-    * Setting the zoom and camera position
-    */
-    private void setCamera(LatLng latLng){
-        mMap.animateCamera( CameraUpdateFactory.newLatLngZoom( latLng, 13 ));
+     * Setting the zoom and camera position
+     */
+    private void setCamera(LatLng latLng) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
         // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng)); // podstawowa metoda, bez kontroli nad zoomem - nie używać!
     }
 
     /**
-   * Granting access to read the current position of the user
-   */
+     * Granting access to read the current position of the user
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == MY_LOCATION_REQUEST_CODE) {
@@ -152,7 +140,7 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
                     if (Build.VERSION.SDK_INT >= 23) { // Marshmallow
                         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_REQUEST_CODE);
                     } else {
-                        //TODO zastanowić się czy robimy coś w przypadku, gdy użytkownik nie zezwolił na udostępnianie sojej lokalizacji - moim zdaniem możemy elsa po prostu olać xD
+                        //TODO zastanowić się czy robimy coś w przypadku, gdy użytkownik nie zezwolił na udostępnianie swojej lokalizacji - moim zdaniem możemy elsa po prostu olać xD
                         // (gdyż dla api > 23 już wymusiłam ponownego permissiona, nie chce mi się szukać jak to zrobić dla niższych wersji)
                     }
                     return;
@@ -167,6 +155,7 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
 
     /**
      * Connected to Location (permission in AndroidManifest), user MUST accept this permission if he want use app.
+     *
      * @param connectionHint simple bundle (I don't use it)
      */
     @Override
@@ -189,7 +178,7 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
 
             //TODO delete the code : //dodany żeby pokazać Wam, o co w tym chodzi ;)
             try {
-                Toast.makeText(this, getActualLocactionAdress(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getActualLocactionAdress(), Toast.LENGTH_SHORT).show();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -200,8 +189,8 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     /**
-    * Method inclusive current user's point's position
-    */
+     * Method inclusive current user's point's position
+     */
     private void onLocationEnabled() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
@@ -213,16 +202,16 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     /**
-     *  Read the name of the current user's position from Geocoder
+     * Read the name of the current user's position from Geocoder
      * returning string of address of 'Feature name - Locality - Thoroughfare - Country name'
      */
     private String getActualLocactionAdress() throws IOException {
         String address = "";
         Geocoder gc = new Geocoder(this, Locale.getDefault());
-        List<Address> addressList = gc.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(),1);
+        List<Address> addressList = gc.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
         if (addressList.size() > 0 && addressList != null) {
-            address = (addressList.get(0).getFeatureName()+ "-" +
-                    ""+addressList.get(0).getLocality()+"-"+addressList.get(0).getThoroughfare()+"-"+addressList.get(0).getCountryName());
+            address = (addressList.get(0).getFeatureName() + "-" +
+                    "" + addressList.get(0).getLocality() + "-" + addressList.get(0).getThoroughfare() + "-" + addressList.get(0).getCountryName());
         }
         return address;
     }
@@ -231,7 +220,7 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
      * The method is calling when Activity is disabled
      */
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         //TODO Niezbędne jak już wprowadzimy bazę danych (wystarczy wyłączyć komentarz)
 //        if (dbHelper != null) {
 //            dbHelper.close();
