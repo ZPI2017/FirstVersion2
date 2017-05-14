@@ -140,9 +140,11 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
             return true;
         }
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_map:
                 startActivity(new Intent(this, MapsMainActivity.class));
                 return true;
+            case R.id.action_create_trip:
+                startActivity(new Intent(this, CreateTripActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="yalantis.com.sidemenu.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_map"
         android:orderInCategory="100"
         android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_create_trip"
+        android:orderInCategory="100"
+        android:title="Utwórz wycieczkę"
         app:showAsAction="never" />
 </menu>
