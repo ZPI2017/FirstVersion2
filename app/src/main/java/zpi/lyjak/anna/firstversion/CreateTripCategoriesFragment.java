@@ -12,6 +12,12 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,8 +35,26 @@ public class CreateTripCategoriesFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        ListView listView = (ListView) getView().findViewById(R.id.listViewCreateTripCat);
-        listView.setAdapter(new CreateTripCategoriesAdapter(getContext(), cats));
+        final ListView listView = (ListView) getView().findViewById(R.id.listViewCreateTripCat);
+        final List<String> cats = new ArrayList<>();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("categories").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Toast.makeText(getContext(), "Klk", Toast.LENGTH_SHORT).show();
+                cats.clear();
+                Toast.makeText(getContext(), Long.toString(dataSnapshot.getChildrenCount()), Toast.LENGTH_SHORT).show();
+                for (DataSnapshot category : dataSnapshot.getChildren()) {
+                    cats.add(category.getValue().toString());
+                }
+                listView.setAdapter(new CreateTripCategoriesAdapter(getContext(), cats));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getContext(), "Coś się z bało", Toast.LENGTH_SHORT).show();
+            }
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,6 +87,4 @@ public class CreateTripCategoriesFragment extends Fragment {
         //TODO przkazać odpowiednio zaznaczone
     }
 
-    private static List<String> cats = Arrays.asList("Zabytki", "Kościoły", "Muzea", "Galerie sztuki",
-            "Przyroda", "Jedzenie", "Galerie handlowe", "Obiekty kulturalne");
 }
