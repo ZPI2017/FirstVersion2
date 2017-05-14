@@ -45,7 +45,7 @@ public class CreateTripCategoriesFragment extends Fragment {
                 cats.clear();
                 Toast.makeText(getContext(), Long.toString(dataSnapshot.getChildrenCount()), Toast.LENGTH_SHORT).show();
                 for (DataSnapshot category : dataSnapshot.getChildren()) {
-                    cats.add(category.getValue().toString());
+                    cats.add(category.child("name").getValue().toString());
                 }
                 listView.setAdapter(new CreateTripCategoriesAdapter(getContext(), cats));
             }
