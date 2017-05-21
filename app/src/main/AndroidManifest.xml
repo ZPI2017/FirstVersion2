@@ -37,6 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="zpi.szymala.kasia.firstversion.ShowAtrakcje">
+
+        </activity>
         <activity
             android:name=".MapsMainActivity"
             android:label="@string/title_activity_maps_main"></activity>

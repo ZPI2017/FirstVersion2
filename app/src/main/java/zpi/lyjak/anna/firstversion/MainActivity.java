@@ -25,6 +25,7 @@ import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import yalantis.com.sidemenu.model.SlideMenuItem;
 import yalantis.com.sidemenu.util.ViewAnimator;
 import zpi.lyjak.anna.firstversion.fragmentExample.ExampleFragment;
+import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 
 public class MainActivity extends AppCompatActivity implements ViewAnimator.ViewAnimatorListener {
 
@@ -145,6 +146,10 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 return true;
             case R.id.action_create_trip:
                 startActivity(new Intent(this, CreateTripActivity.class));
+                return  true;
+            case R.id.action_show_atrakcje:
+                startActivity(new Intent(this, ShowAtrakcje.class));
+                return  true;
             default:
                 return super.onOptionsItemSelected(item);
         }
