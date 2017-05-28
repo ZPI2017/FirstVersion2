@@ -44,6 +44,7 @@
             android:name=".MapsMainActivity"
             android:label="@string/title_activity_maps_main"></activity>
         <activity android:name=".CreateTripActivity"></activity>
+        <activity android:name=".TripHistoryActivity"></activity>
     </application>
 
 </manifest>

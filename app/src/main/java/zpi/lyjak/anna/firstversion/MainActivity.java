@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -79,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         list.add(menuItem6);
         SlideMenuItem menuItem7 = new SlideMenuItem(ExampleFragment.MOVIE, R.drawable.icn_7);
         list.add(menuItem7);
+        SlideMenuItem menuItem8 = new SlideMenuItem("Trip History", R.drawable.history_icon);
+        list.add(menuItem8);
     }
 
     private void setActionBar() {
@@ -179,6 +182,8 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         switch (slideMenuItem.getName()) {
             case ExampleFragment.CLOSE:
                 return screenShotable;
+            case "Trip History":
+                startActivity(new Intent(this, TripHistoryActivity.class));
             default:
                 return replaceFragment(screenShotable, position);
         }
