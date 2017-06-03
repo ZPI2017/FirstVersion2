@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="zpi.lyjak.anna.MainActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,12 +39,12 @@
         </activity>
         <activity android:name="zpi.szymala.kasia.firstversion.ShowAtrakcje" />
         <activity
-            android:name=".MapsMainActivity"
+            android:name="zpi.lyjak.anna.MapsMainActivity"
             android:label="@string/title_activity_maps_main" />
-        <activity android:name=".CreateTripActivity" />
-        <activity android:name=".TripHistoryActivity" />
+        <activity android:name="zpi.lignarski.janusz.CreateTripActivity" />
+        <activity android:name="zpi.mazurek.tomasz.firstversion.TripHistoryActivity" />
         <activity android:name="zpi.mazurek.tomasz.firstversion.RecomendedTrips" />
-        <activity android:name="zpi.mazurek.tomasz.firstversion.TripOnMapActivity"></activity>
+        <activity android:name="zpi.mazurek.tomasz.firstversion.TripOnMapActivity"/>
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import zpi.lyjak.anna.firstversion.R;
 
+
 public class TripOnMapActivity extends AppCompatActivity {
 
     MapView mapView;

@@ -1,4 +1,4 @@
-package zpi.lyjak.anna.firstversion;
+package zpi.mazurek.tomasz.firstversion;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

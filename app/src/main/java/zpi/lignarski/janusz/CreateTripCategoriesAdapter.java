@@ -1,4 +1,4 @@
-package zpi.lyjak.anna.firstversion;
+package zpi.lignarski.janusz;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.List;
+
+import zpi.lyjak.anna.firstversion.R;
 
 
 public class CreateTripCategoriesAdapter extends BaseAdapter {
