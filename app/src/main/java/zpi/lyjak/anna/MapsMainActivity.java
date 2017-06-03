@@ -1,4 +1,4 @@
-package zpi.lyjak.anna.firstversion;
+package zpi.lyjak.anna;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,6 +28,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import zpi.lyjak.anna.firstversion.R;
 
 /**
  * @author Anna Łyjak

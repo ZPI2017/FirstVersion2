@@ -1,4 +1,4 @@
-package zpi.lyjak.anna.firstversion;
+package zpi.lignarski.janusz;
 
 
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import zpi.lyjak.anna.firstversion.R;
 
 public class CreateTripDatesFragment extends Fragment {
 

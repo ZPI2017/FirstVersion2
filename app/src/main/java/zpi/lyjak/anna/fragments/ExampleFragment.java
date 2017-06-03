@@ -1,4 +1,4 @@
-package zpi.lyjak.anna.firstversion.fragmentExample;
+package zpi.lyjak.anna.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,6 +13,9 @@ import android.widget.ImageView;
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import zpi.lyjak.anna.firstversion.R;
 
+/**
+ * @author Anna Łyjak
+ */
 public class ExampleFragment extends Fragment implements ScreenShotable {
     public static final String CLOSE = "Close";
     public static final String BUILDING = "Building";

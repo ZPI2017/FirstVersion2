@@ -1,4 +1,4 @@
-package zpi.lyjak.anna.firstversion;
+package zpi.lyjak.anna;
 
 import android.animation.Animator;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,9 +24,15 @@ import yalantis.com.sidemenu.interfaces.Resourceble;
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import yalantis.com.sidemenu.model.SlideMenuItem;
 import yalantis.com.sidemenu.util.ViewAnimator;
-import zpi.lyjak.anna.firstversion.fragmentExample.ExampleFragment;
+import zpi.lignarski.janusz.CreateTripActivity;
+import zpi.mazurek.tomasz.firstversion.TripHistoryActivity;
+import zpi.lyjak.anna.firstversion.R;
+import zpi.lyjak.anna.fragments.ExampleFragment;
 import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 
+/**
+ * @author Anna Łyjak
+ */
 public class MainActivity extends AppCompatActivity implements ViewAnimator.ViewAnimatorListener {
 
     private DrawerLayout drawerLayout;

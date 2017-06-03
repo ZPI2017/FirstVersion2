@@ -4,6 +4,6 @@
     android:id="@+id/LayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="zpi.lyjak.anna.firstversion.CreateTripActivity">
+    tools:context="zpi.lignarski.janusz.CreateTripActivity">
 
 </android.support.constraint.ConstraintLayout>

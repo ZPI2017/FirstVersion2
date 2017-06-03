@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="zpi.lyjak.anna.MainActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,10 +41,10 @@
 
         </activity>
         <activity
-            android:name=".MapsMainActivity"
+            android:name="zpi.lyjak.anna.MapsMainActivity"
             android:label="@string/title_activity_maps_main"></activity>
-        <activity android:name=".CreateTripActivity"></activity>
-        <activity android:name=".TripHistoryActivity"></activity>
+        <activity android:name="zpi.lignarski.janusz.CreateTripActivity"></activity>
+        <activity android:name="zpi.mazurek.tomasz.firstversion.TripHistoryActivity"></activity>
     </application>
 
 </manifest>
