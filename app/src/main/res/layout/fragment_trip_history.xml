@@ -7,13 +7,14 @@
 
     <TextView
         android:id="@+id/history_title"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginBottom="10dp"
         android:background="@color/colorPrimaryDark"
         android:text="TextView"
         android:textAlignment="center"
-        android:textSize="30sp" />
+        android:textColor="@color/cardview_light_background"
+        android:textSize="22sp" />
 
     <ListView
         android:id="@+id/tripHistoryList"
