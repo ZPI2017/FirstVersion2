@@ -26,6 +26,7 @@ import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import yalantis.com.sidemenu.model.SlideMenuItem;
 import yalantis.com.sidemenu.util.ViewAnimator;
 import zpi.lyjak.anna.firstversion.fragmentExample.ExampleFragment;
+import zpi.mazurek.tomasz.firstversion.RecomendedTrips;
 import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 
 public class MainActivity extends AppCompatActivity implements ViewAnimator.ViewAnimatorListener {
@@ -64,24 +65,10 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     }
 
     private void createMenuList() {
-        SlideMenuItem menuItem0 = new SlideMenuItem(ExampleFragment.CLOSE, R.drawable.icn_close);
-        list.add(menuItem0);
-        SlideMenuItem menuItem = new SlideMenuItem(ExampleFragment.BUILDING, R.drawable.icn_1);
-        list.add(menuItem);
-        SlideMenuItem menuItem2 = new SlideMenuItem(ExampleFragment.BOOK, R.drawable.icn_2);
-        list.add(menuItem2);
-        SlideMenuItem menuItem3 = new SlideMenuItem(ExampleFragment.PAINT, R.drawable.icn_3);
-        list.add(menuItem3);
-        SlideMenuItem menuItem4 = new SlideMenuItem(ExampleFragment.CASE, R.drawable.icn_4);
-        list.add(menuItem4);
-        SlideMenuItem menuItem5 = new SlideMenuItem(ExampleFragment.SHOP, R.drawable.icn_5);
-        list.add(menuItem5);
-        SlideMenuItem menuItem6 = new SlideMenuItem(ExampleFragment.PARTY, R.drawable.icn_6);
-        list.add(menuItem6);
-        SlideMenuItem menuItem7 = new SlideMenuItem(ExampleFragment.MOVIE, R.drawable.icn_7);
-        list.add(menuItem7);
-        SlideMenuItem menuItem8 = new SlideMenuItem("Trip History", R.drawable.history_icon);
-        list.add(menuItem8);
+        SlideMenuItem trip_history = new SlideMenuItem("Trip History", R.drawable.history_icon);
+        list.add(trip_history);
+        SlideMenuItem recomended_trips = new SlideMenuItem("Recomended Trips", R.drawable.star_icon);
+        list.add(recomended_trips);
     }
 
     private void setActionBar() {
@@ -184,6 +171,10 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 return screenShotable;
             case "Trip History":
                 startActivity(new Intent(this, TripHistoryActivity.class));
+                return screenShotable;
+            case "Recomended Trips":
+                startActivity(new Intent(this, RecomendedTrips.class));
+                return screenShotable;
             default:
                 return replaceFragment(screenShotable, position);
         }

@@ -1,7 +1,10 @@
 package zpi.lyjak.anna.firstversion;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import zpi.szymala.kasia.firstversion.Atrakcja;
 
 /**
  * Created by Tomasz on 21.05.2017.
@@ -14,12 +17,25 @@ public class Trip {
     private boolean isFinished;
     private long tripTime;
     private int rate;
+    private String name;
+    ArrayList<Atrakcja> attractions;
 
-    Trip()
+    public Trip()
     {
+        name = "";
         isFinished = false;
         endDate = null;
         startDate = Calendar.getInstance();
+        attractions = new ArrayList<>();
+    }
+
+    public Trip(String name)
+    {
+        this.name = name;
+        isFinished = false;
+        endDate = null;
+        startDate = Calendar.getInstance();
+        attractions = new ArrayList<>();
     }
 
     public void setRate(int rate)
@@ -64,5 +80,10 @@ public class Trip {
         else
             result = tripTime/3600000 + "h " + tripTime%360000 + "m ";
         return result;
+    }
+
+    public void addAttraction(Atrakcja attraction)
+    {
+        attractions.add(attraction);
     }
 }

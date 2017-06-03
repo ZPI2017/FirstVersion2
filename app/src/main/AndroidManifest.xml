@@ -37,14 +37,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="zpi.szymala.kasia.firstversion.ShowAtrakcje">
-
-        </activity>
+        <activity android:name="zpi.szymala.kasia.firstversion.ShowAtrakcje" />
         <activity
             android:name=".MapsMainActivity"
-            android:label="@string/title_activity_maps_main"></activity>
-        <activity android:name=".CreateTripActivity"></activity>
-        <activity android:name=".TripHistoryActivity"></activity>
+            android:label="@string/title_activity_maps_main" />
+        <activity android:name=".CreateTripActivity" />
+        <activity android:name=".TripHistoryActivity" />
+        <activity android:name="zpi.mazurek.tomasz.firstversion.RecomendedTrips" />
+        <activity android:name="zpi.mazurek.tomasz.firstversion.TripOnMapActivity"></activity>
     </application>
 
 </manifest>
