@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import zpi.lignarski.janusz.ImageLoadTask;
 import zpi.lyjak.anna.firstversion.R;
 
 /**
@@ -38,9 +39,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Atrakcja atrakcja=mDataset.get(position);
         holder.nazwa.setText(atrakcja.getNazwa());
         holder.szczegoly.setText(atrakcja.getSzczegoly());
-        holder.imageView.setImageResource(atrakcja.getZdjecie());
+        new ImageLoadTask(atrakcja.getZdjecieURL(), holder.imageView).execute();
+        //holder.imageView.setImageResource(atrakcja.getZdjecieURL());
 
-        //Glide.with(context).load(atrakcja.getZdjecie()).into(holder.imageView);
+        //Glide.with(context).load(atrakcja.getZdjecieURL()).into(holder.imageView);
     }
 
     @Override

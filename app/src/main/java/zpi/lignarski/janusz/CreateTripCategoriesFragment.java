@@ -38,12 +38,10 @@ public class CreateTripCategoriesFragment extends Fragment {
         final ListView listView = (ListView) getView().findViewById(R.id.listViewCreateTripCat);
         final List<String> cats = new ArrayList<>();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("categories").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(getContext(), "Klk", Toast.LENGTH_SHORT).show();
                 cats.clear();
-                Toast.makeText(getContext(), Long.toString(dataSnapshot.getChildrenCount()), Toast.LENGTH_SHORT).show();
                 for (DataSnapshot category : dataSnapshot.getChildren()) {
                     cats.add(category.child("name").getValue().toString());
                 }
@@ -58,7 +56,6 @@ public class CreateTripCategoriesFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Klk", Toast.LENGTH_SHORT).show();
                 CheckBox checkBox = (CheckBox)view.findViewById(R.id.checkBox);
                 checkBox.setChecked(!checkBox.isChecked());
             }

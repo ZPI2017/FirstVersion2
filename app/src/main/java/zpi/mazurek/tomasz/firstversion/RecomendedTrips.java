@@ -7,45 +7,74 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.google.android.gms.common.data.BitmapTeleporter;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import zpi.lignarski.janusz.ImageLoadTask;
 import zpi.lyjak.anna.firstversion.R;
 import zpi.szymala.kasia.firstversion.Atrakcja;
+import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 
 public class RecomendedTrips extends AppCompatActivity {
 
     BaseTrip[] trips;
+    RecomendedTripAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        trips = new BaseTrip[3];
-        trips[0] = new BaseTrip("Najlepsze atrakce", R.drawable.hala);
-        trips[0].setRate(4);
-        trips[1] = new BaseTrip("Wycieczka2", R.drawable.hala);
-        trips[2] = new BaseTrip("Wycieczka3", R.drawable.hala);
-
-        trips[0].addAttraction(new Atrakcja("Hala Stulecia", "Costam", R.drawable.hala, new LatLng(51.106869, 17.077258)));
-        trips[0].addAttraction(new Atrakcja("Rynek", "Costam", R.drawable.rynek, new LatLng(51.110108, 17.032062)));
-        trips[0].addAttraction(new Atrakcja("Afrykarium", "Costam", R.drawable.afrykarium, new LatLng(51.104389, 17.075356)));
+//        trips = new BaseTrip[3];
+//        trips[0] = new BaseTrip("Najlepsze atrakce", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/hala.jpeg?alt=media&token=a3ed343e-8f79-434a-9b67-2b72a20366a7");
+//        trips[0].setRate(4);
+//        trips[1] = new BaseTrip("Wycieczka2", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/hala.jpeg?alt=media&token=a3ed343e-8f79-434a-9b67-2b72a20366a7");
+//        trips[2] = new BaseTrip("Wycieczka3", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/hala.jpeg?alt=media&token=a3ed343e-8f79-434a-9b67-2b72a20366a7");
+//
+//        trips[0].addAttraction(new Atrakcja("Hala Stulecia", "Costam", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/hala.jpeg?alt=media&token=a3ed343e-8f79-434a-9b67-2b72a20366a7", 51.106869, 17.077285));
+//        trips[0].addAttraction(new Atrakcja("Rynek", "Costam", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/rynek.jpg?alt=media&token=283fa1ea-53e9-4181-899a-80700d75a1be", 51.110108, 17.032062));
+//        trips[0].addAttraction(new Atrakcja("Afrykarium", "Costam", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/afrykarium.jpg?alt=media&token=7f4bb4aa-ba1a-42d6-9297-92c65f50c5bb", 51.104389, 17.075356));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recomended_trips);
 
         ListView list = (ListView) this.findViewById(R.id.recomended_trips);
-        list.setAdapter(new RecomendedTripAdapter(this, trips));
+        prepareTrips(list);
 
+    }
+
+    private void prepareTrips(final ListView list) {
+        DatabaseReference mRecommended = FirebaseDatabase.getInstance().getReference().child("baseTrips");
+        mRecommended.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                trips = new BaseTrip[(int)(dataSnapshot.getChildrenCount())];
+                int i = 0;
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    trips[i] = (snap.getValue(BaseTrip.class));
+                    i++;
+                }
+
+                list.setAdapter(new RecomendedTripAdapter(RecomendedTrips.this, trips));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(RecomendedTrips.this, "Coś się z bało", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
 
@@ -85,7 +114,7 @@ class RecomendedTripAdapter extends BaseAdapter
         TextView name = (TextView) tripCell.findViewById(R.id.trip_name);
         name.setText(trips[i].getName());
         ImageView cover = (ImageView) tripCell.findViewById(R.id.trip_cover);
-        cover.setImageResource(trips[i].getPhoto());
+        new ImageLoadTask(trips[i].getPhotoURL(), cover).execute();
         RatingBar rate = (RatingBar) tripCell.findViewById(R.id.recomended_trip_rate);
         rate.setRating(trips[i].getRate());
 
@@ -122,7 +151,7 @@ class RecomendedTripAdapter extends BaseAdapter
                 HashMap<String, LatLng> map = new HashMap<>();
                 for(int j = 0; j < trips[i].getAttractions().size(); j++)
                 {
-                    map.put(trips[i].getAttractions().get(j).getNazwa(), trips[i].getAttractions().get(j).getLocation());
+                    map.put(trips[i].getAttractions().get(j).getNazwa(), trips[i].getAttractions().get(j).buildLocation());
                 }
                 Intent intent = new Intent(context, TripOnMapActivity.class);
                 intent.putExtra("map", map);

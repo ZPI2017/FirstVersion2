@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,12 +25,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 import zpi.lyjak.anna.firstversion.R;
+import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 
 /**
  * @author Anna Łyjak
@@ -76,8 +83,27 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
         onLocationEnabled();
 
         // Add a marker in Wrocław and move the camera
-        LatLng wroclaw = new LatLng(51.109489, 17.03284);
-        mMap.addMarker(new MarkerOptions().position(wroclaw).title("Marker in Wrocław"));
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                DatabaseReference mLocations = FirebaseDatabase.getInstance().getReference().child("locations");
+                mLocations.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot lokacja : dataSnapshot.getChildren()) {
+                            LatLng position = new LatLng((Double)lokacja.child("lattitude").getValue(), (Double)lokacja.child("longitude").getValue());
+                            mMap.addMarker(new MarkerOptions().position(position).title(lokacja.getKey()));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(MapsMainActivity.this, "Coś się z bało", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return null;
+            }
+        }.execute();
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(wroclaw));
     }
 

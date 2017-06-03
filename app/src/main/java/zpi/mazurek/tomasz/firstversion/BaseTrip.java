@@ -1,8 +1,6 @@
 package zpi.mazurek.tomasz.firstversion;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import zpi.szymala.kasia.firstversion.Atrakcja;
 
@@ -14,50 +12,67 @@ public class BaseTrip {
 
     private long estimatedTime;
     private float rate;
-    private int photo;
+    private String photoURL;
     private String name;
-    ArrayList<Atrakcja> attractions;
+    private ArrayList<Atrakcja> attractions;
 
     public BaseTrip()
     {
-        name = "";
-        attractions = new ArrayList<>();
-        rate = 0;
+        setName("");
+        setAttractions(new ArrayList<Atrakcja>());
+        setRate(0);
     }
 
-    public BaseTrip(String name, int photo)
+    public BaseTrip(String name, String photoURL)
     {
-        this.photo = photo;
-        this.name = name;
-        attractions = new ArrayList<>();
-        rate = 0;
+        this.setPhotoURL(photoURL);
+        this.setName(name);
+        setAttractions(new ArrayList<Atrakcja>());
+        setRate(0);
     }
-
-    public void setRate(int rate)
-    {
-        this.rate = rate;
-    }
-
-    public float getRate(){ return rate;}
-
 
     public void addAttraction(Atrakcja attraction)
     {
-        attractions.add(attraction);
+        getAttractions().add(attraction);
     }
 
-    public ArrayList<Atrakcja> getAttractions()
-    {
-        return attractions;
+    public long getEstimatedTime() {
+        return estimatedTime;
     }
 
-    public String getName()
-    {
+    public void setEstimatedTime(long estimatedTime) {
+        this.estimatedTime = estimatedTime;
+    }
+
+    public float getRate() {
+        return rate;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public int getPhoto()
-    {
-        return photo;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<Atrakcja> getAttractions() {
+        return attractions;
+    }
+
+    public void setAttractions(ArrayList<Atrakcja> attractions) {
+        this.attractions = attractions;
     }
 }

@@ -8,39 +8,74 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Atrakcja {
 
-    private  String nazwa, szczegoly;
-    private  int zdjecie;
-    private LatLng location;
+    private String nazwa;
+    private String szczegoly;
+    private String zdjecieURL;
+    private double lattitude;
+    private double longitude;
 
-    public Atrakcja(String nazwa, String szczegoly,int zdjecie){
-        this.nazwa=nazwa;
-        this.szczegoly=szczegoly;
-        this.zdjecie=zdjecie;
-        location = new LatLng(0.0,0.0);
+    public Atrakcja(){};
+
+    public Atrakcja(String nazwa, String szczegoly,String zdjecieURL){
+        this.setNazwa(nazwa);
+        this.setSzczegoly(szczegoly);
+        this.setZdjecieURL(zdjecieURL);
+        setLattitude(0.0);
+        setLongitude(0.0);
     }
 
-    public Atrakcja(String nazwa, String szczegoly,int zdjecie, LatLng location ){
-        this.nazwa=nazwa;
-        this.szczegoly=szczegoly;
-        this.zdjecie=zdjecie;
-        this.location = location;
+    public Atrakcja(String nazwa, String szczegoly, String zdjecieURL, double lattitude, double longitude ){
+        this.setNazwa(nazwa);
+        this.setSzczegoly(szczegoly);
+        this.setZdjecieURL(zdjecieURL);
+        this.setLattitude(lattitude);
+        this.setLongitude(longitude);
 
     }
 
-    public String getNazwa(){
-        return  nazwa;
+
+    public LatLng buildLocation()
+    {
+        return new LatLng(lattitude, longitude);
     }
 
-    public String getSzczegoly(){
+    public String getNazwa() {
+        return nazwa;
+    }
+
+    public void setNazwa(String nazwa) {
+        this.nazwa = nazwa;
+    }
+
+    public String getSzczegoly() {
         return szczegoly;
     }
 
-    public int getZdjecie(){
-        return zdjecie;
+    public void setSzczegoly(String szczegoly) {
+        this.szczegoly = szczegoly;
     }
 
-    public LatLng getLocation()
-    {
-        return location;
+    public String getZdjecieURL() {
+        return zdjecieURL;
+    }
+
+    public void setZdjecieURL(String zdjecieURL) {
+        this.zdjecieURL = zdjecieURL;
+    }
+
+    public double getLattitude() {
+        return lattitude;
+    }
+
+    public void setLattitude(double lattitude) {
+        this.lattitude = lattitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }
