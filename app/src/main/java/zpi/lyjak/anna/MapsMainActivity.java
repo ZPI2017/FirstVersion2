@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +37,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import zpi.lignarski.janusz.AttDetailsFragment;
 import zpi.lyjak.anna.firstversion.R;
 import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 
@@ -56,9 +59,15 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_main);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = new SupportMapFragment();
         mapFragment.getMapAsync(this);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.map, mapFragment);
+        transaction.commit();
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -91,8 +100,8 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot lokacja : dataSnapshot.getChildren()) {
-                            LatLng position = new LatLng((Double)lokacja.child("lattitude").getValue(), (Double)lokacja.child("longitude").getValue());
-                            mMap.addMarker(new MarkerOptions().position(position).title(lokacja.getKey()));
+                            LatLng position = new LatLng((Double)lokacja.child("latitude").getValue(), (Double)lokacja.child("longitude").getValue());
+                            mMap.addMarker(new MarkerOptions().position(position).title(lokacja.child("nazwa").getValue().toString())).setTag(lokacja.getKey());
                         }
                     }
 
@@ -104,6 +113,20 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
                 return null;
             }
         }.execute();
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                AttDetailsFragment fragment = new AttDetailsFragment();
+                Bundle b = new Bundle();
+                b.putString("attId", marker.getTag().toString());
+                fragment.setArguments(b);
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.map, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(wroclaw));
     }
 

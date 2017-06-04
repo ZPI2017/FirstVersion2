@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import zpi.lignarski.janusz.ImageLoadTask;
 import zpi.lyjak.anna.firstversion.R;
@@ -122,6 +123,7 @@ class RecomendedTripAdapter extends BaseAdapter
         TextView att1 = (TextView) tripCell.findViewById(R.id.attraction1);
         TextView att2 = (TextView) tripCell.findViewById(R.id.attraction2);
 
+        Iterator<String> iterator = trips[i].getAttractions().keySet().iterator();
         switch(trips[i].getAttractions().size()) {
             case 0:
                 att0.setVisibility(View.INVISIBLE);
@@ -129,32 +131,32 @@ class RecomendedTripAdapter extends BaseAdapter
                 att2.setVisibility(View.INVISIBLE);
                 break;
             case 1:
-                att0.setText(trips[i].getAttractions().get(0).getNazwa());
+                att0.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
                 att1.setVisibility(View.INVISIBLE);
                 att2.setVisibility(View.INVISIBLE);
                 break;
             case 2:
-                att0.setText(trips[i].getAttractions().get(0).getNazwa());
-                att1.setText(trips[i].getAttractions().get(1).getNazwa());
+                att0.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
+                att1.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
                 att2.setVisibility(View.INVISIBLE);
                 break;
             default:
-                att0.setText(trips[i].getAttractions().get(0).getNazwa());
-                att1.setText(trips[i].getAttractions().get(1).getNazwa());
-                att2.setText(trips[i].getAttractions().get(2).getNazwa());
+                att0.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
+                att1.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
+                att2.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
                 break;
         }
 
         tripCell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HashMap<String, LatLng> map = new HashMap<>();
-                for(int j = 0; j < trips[i].getAttractions().size(); j++)
-                {
-                    map.put(trips[i].getAttractions().get(j).getNazwa(), trips[i].getAttractions().get(j).buildLocation());
-                }
+//                HashMap<String, LatLng> map = new HashMap<>();
+//                for(int j = 0; j < trips[i].getAttractions().size(); j++)
+//                {
+//                    map.put(trips[i].getAttractions().get(j).getNazwa(), trips[i].getAttractions().get(j).buildLocation());
+//                }
                 Intent intent = new Intent(context, TripOnMapActivity.class);
-                intent.putExtra("map", map);
+                intent.putExtra("map", trips[i].getAttractions());
                 context.startActivity(intent);
             }
         });

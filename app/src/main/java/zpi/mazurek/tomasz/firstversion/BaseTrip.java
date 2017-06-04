@@ -1,6 +1,8 @@
 package zpi.mazurek.tomasz.firstversion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import zpi.szymala.kasia.firstversion.Atrakcja;
 
@@ -14,26 +16,20 @@ public class BaseTrip {
     private float rate;
     private String photoURL;
     private String name;
-    private ArrayList<Atrakcja> attractions;
+    private HashMap<String, HashMap<String, String>> attractions;
 
     public BaseTrip()
     {
-        setName("");
-        setAttractions(new ArrayList<Atrakcja>());
-        setRate(0);
+//        setName("");
+        attractions = new HashMap<>();
+//        setRate(0);
     }
 
     public BaseTrip(String name, String photoURL)
     {
         this.setPhotoURL(photoURL);
         this.setName(name);
-        setAttractions(new ArrayList<Atrakcja>());
         setRate(0);
-    }
-
-    public void addAttraction(Atrakcja attraction)
-    {
-        getAttractions().add(attraction);
     }
 
     public long getEstimatedTime() {
@@ -68,11 +64,11 @@ public class BaseTrip {
         this.name = name;
     }
 
-    public ArrayList<Atrakcja> getAttractions() {
+    public HashMap<String, HashMap<String, String>> getAttractions() {
         return attractions;
     }
 
-    public void setAttractions(ArrayList<Atrakcja> attractions) {
+    public void setAttractions(HashMap<String, HashMap<String, String>> attractions) {
         this.attractions = attractions;
     }
 }

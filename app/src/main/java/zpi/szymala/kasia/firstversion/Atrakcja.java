@@ -11,7 +11,7 @@ public class Atrakcja {
     private String nazwa;
     private String szczegoly;
     private String zdjecieURL;
-    private double lattitude;
+    private double latitude;
     private double longitude;
 
     public Atrakcja(){};
@@ -20,15 +20,15 @@ public class Atrakcja {
         this.setNazwa(nazwa);
         this.setSzczegoly(szczegoly);
         this.setZdjecieURL(zdjecieURL);
-        setLattitude(0.0);
+        setLatitude(0.0);
         setLongitude(0.0);
     }
 
-    public Atrakcja(String nazwa, String szczegoly, String zdjecieURL, double lattitude, double longitude ){
+    public Atrakcja(String nazwa, String szczegoly, String zdjecieURL, double latitude, double longitude ){
         this.setNazwa(nazwa);
         this.setSzczegoly(szczegoly);
         this.setZdjecieURL(zdjecieURL);
-        this.setLattitude(lattitude);
+        this.setLatitude(latitude);
         this.setLongitude(longitude);
 
     }
@@ -36,7 +36,7 @@ public class Atrakcja {
 
     public LatLng buildLocation()
     {
-        return new LatLng(lattitude, longitude);
+        return new LatLng(latitude, longitude);
     }
 
     public String getNazwa() {
@@ -63,12 +63,12 @@ public class Atrakcja {
         this.zdjecieURL = zdjecieURL;
     }
 
-    public double getLattitude() {
-        return lattitude;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLattitude(double lattitude) {
-        this.lattitude = lattitude;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public double getLongitude() {
