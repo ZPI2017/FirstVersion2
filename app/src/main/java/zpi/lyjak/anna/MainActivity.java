@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     private List<SlideMenuItem> list = new ArrayList<>();
     private ExampleFragment contentFragment;
     private ViewAnimator viewAnimator;
-    private int res = R.drawable.content_music;
+    private int res = R.drawable.start_layout;
     private LinearLayout linearLayout;
 
     @Override
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        contentFragment = ExampleFragment.newInstance(R.drawable.content_music);
+        contentFragment = ExampleFragment.newInstance(R.drawable.start_layout);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, contentFragment)
                 .commit();
