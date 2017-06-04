@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
 
         SlideMenuItem menuItem8 = new SlideMenuItem("Trip History", R.drawable.history_icon);
         list.add(menuItem8);
+
+        SlideMenuItem mapOpen = new SlideMenuItem("Map", R.drawable.mapiconmini);
+        list.add(mapOpen);
     }
 
     private void setActionBar() {
@@ -180,6 +183,9 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 return screenShotable;
             case "Recomended Trips":
                 startActivity(new Intent(this, RecomendedTrips.class));
+                return screenShotable;
+            case "Map":
+                startActivity(new Intent(this, MapsMainActivity.class));
                 return screenShotable;
             default:
                 return replaceFragment(screenShotable, position);
