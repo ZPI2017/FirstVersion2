@@ -70,14 +70,20 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     }
 
     private void createMenuList() {
-        SlideMenuItem recomendedTrips = new SlideMenuItem("Recomended Trips", R.drawable.star_icon);
+        SlideMenuItem recomendedTrips = new SlideMenuItem("Recomended Trips", R.drawable.heart);
         list.add(recomendedTrips);
-
-        SlideMenuItem menuItem8 = new SlideMenuItem("Trip History", R.drawable.history_icon);
-        list.add(menuItem8);
 
         SlideMenuItem mapOpen = new SlideMenuItem("Map", R.drawable.mapiconmini);
         list.add(mapOpen);
+
+        SlideMenuItem addTrip = new SlideMenuItem("Add Trips", R.drawable.create);
+        list.add(addTrip);
+
+        SlideMenuItem details = new SlideMenuItem("Details", R.drawable.details);
+        list.add(details);
+
+        SlideMenuItem history = new SlideMenuItem("Trip History", R.drawable.history_icon);
+        list.add(history);
     }
 
     private void setActionBar() {
@@ -143,12 +149,6 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
             case R.id.action_map:
                 startActivity(new Intent(this, MapsMainActivity.class));
                 return true;
-            case R.id.action_create_trip:
-                startActivity(new Intent(this, CreateTripActivity.class));
-                return  true;
-            case R.id.action_show_atrakcje:
-                startActivity(new Intent(this, ShowAtrakcje.class));
-                return  true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -186,6 +186,12 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 return screenShotable;
             case "Map":
                 startActivity(new Intent(this, MapsMainActivity.class));
+                return screenShotable;
+            case "Add Trips":
+                startActivity(new Intent(this, CreateTripActivity.class));
+                return screenShotable;
+            case "Details":
+                startActivity(new Intent(this, ShowAtrakcje.class));
                 return screenShotable;
             default:
                 return replaceFragment(screenShotable, position);
