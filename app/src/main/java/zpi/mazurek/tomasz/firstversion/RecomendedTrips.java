@@ -34,15 +34,6 @@ public class RecomendedTrips extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        trips = new BaseTrip[3];
-//        trips[0] = new BaseTrip("Najlepsze atrakce", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/hala.jpeg?alt=media&token=a3ed343e-8f79-434a-9b67-2b72a20366a7");
-//        trips[0].setRate(4);
-//        trips[1] = new BaseTrip("Wycieczka2", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/hala.jpeg?alt=media&token=a3ed343e-8f79-434a-9b67-2b72a20366a7");
-//        trips[2] = new BaseTrip("Wycieczka3", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/hala.jpeg?alt=media&token=a3ed343e-8f79-434a-9b67-2b72a20366a7");
-//
-//        trips[0].addAttraction(new Atrakcja("Hala Stulecia", "Costam", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/hala.jpeg?alt=media&token=a3ed343e-8f79-434a-9b67-2b72a20366a7", 51.106869, 17.077285));
-//        trips[0].addAttraction(new Atrakcja("Rynek", "Costam", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/rynek.jpg?alt=media&token=283fa1ea-53e9-4181-899a-80700d75a1be", 51.110108, 17.032062));
-//        trips[0].addAttraction(new Atrakcja("Afrykarium", "Costam", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/afrykarium.jpg?alt=media&token=7f4bb4aa-ba1a-42d6-9297-92c65f50c5bb", 51.104389, 17.075356));
 
         trips = new ArrayList<>();
         super.onCreate(savedInstanceState);
