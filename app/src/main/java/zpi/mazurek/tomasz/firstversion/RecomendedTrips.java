@@ -1,8 +1,11 @@
 package zpi.mazurek.tomasz.firstversion;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import zpi.lignarski.janusz.ImageLoadTask;
@@ -85,6 +90,12 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
     public RecomendedTripAdapter.ViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
         View tripCell = inflater.inflate(R.layout.recomended_trip_cell, parent, false);
 
+        tripCell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         RecomendedTripAdapter.ViewHolder2 vHolder=new ViewHolder2(tripCell);
         return vHolder;
     }
@@ -120,6 +131,7 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
                 holder.att2.setText(trip.getAttractions().get(iterator.next()).get("nazwa"));
                 break;
         }
+
     }
 
     @Override
@@ -127,8 +139,9 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
         return trips.size();
     }
 
-    public static class ViewHolder2 extends RecyclerView.ViewHolder {
+    public class ViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView name, att0, att1, att2;
+        CardView card;
         ImageView cover;
         RatingBar rate;
         ViewHolder2(View tripCell) {
@@ -139,6 +152,18 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
             att0 = (TextView) tripCell.findViewById(R.id.attraction0);
             att1 = (TextView) tripCell.findViewById(R.id.attraction1);
             att2 = (TextView) tripCell.findViewById(R.id.attraction2);
+            card = (CardView) tripCell.findViewById(R.id.card_view);
+            card.setOnClickListener(this);
+            
+        }
+        @Override
+        public void onClick(View view)
+        {
+            HashMap<String, HashMap<String, String>> map = trips.get(getAdapterPosition()).getAttractions();
+            Intent intent = new Intent(context, TripOnMapActivity.class);
+            intent.putExtra("map", map);
+            context.startActivity(intent);
         }
     }
 }
+
