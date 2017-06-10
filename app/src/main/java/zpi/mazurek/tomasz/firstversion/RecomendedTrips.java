@@ -1,39 +1,35 @@
 package zpi.mazurek.tomasz.firstversion;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.google.android.gms.common.data.BitmapTeleporter;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import zpi.lignarski.janusz.ImageLoadTask;
 import zpi.lyjak.anna.firstversion.R;
-import zpi.szymala.kasia.firstversion.Atrakcja;
-import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 
 public class RecomendedTrips extends AppCompatActivity {
 
-    BaseTrip[] trips;
+    ArrayList<BaseTrip> trips;
     RecomendedTripAdapter mAdapter;
 
     @Override
@@ -48,27 +44,28 @@ public class RecomendedTrips extends AppCompatActivity {
 //        trips[0].addAttraction(new Atrakcja("Rynek", "Costam", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/rynek.jpg?alt=media&token=283fa1ea-53e9-4181-899a-80700d75a1be", 51.110108, 17.032062));
 //        trips[0].addAttraction(new Atrakcja("Afrykarium", "Costam", "https://firebasestorage.googleapis.com/v0/b/zpi2017-77741.appspot.com/o/afrykarium.jpg?alt=media&token=7f4bb4aa-ba1a-42d6-9297-92c65f50c5bb", 51.104389, 17.075356));
 
+        trips = new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recomended_trips);
-
-        ListView list = (ListView) this.findViewById(R.id.recomended_trips);
-        prepareTrips(list);
+        prepareTrips();
+        mAdapter = new RecomendedTripAdapter(this,trips);
+        RecyclerView list = (RecyclerView) this.findViewById(R.id.recomended_trips);
+        final RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(this);
+        list.setLayoutManager(mLayoutManager);
+        list.setItemAnimator(new DefaultItemAnimator());
+        list.setAdapter(mAdapter);
 
     }
 
-    private void prepareTrips(final ListView list) {
+    private void prepareTrips() {
         DatabaseReference mRecommended = FirebaseDatabase.getInstance().getReference().child("baseTrips");
         mRecommended.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                trips = new BaseTrip[(int)(dataSnapshot.getChildrenCount())];
-                int i = 0;
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                    trips[i] = (snap.getValue(BaseTrip.class));
-                    i++;
+                    trips.add((snap.getValue(BaseTrip.class)));
                 }
-
-                list.setAdapter(new RecomendedTripAdapter(RecomendedTrips.this, trips));
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -79,13 +76,13 @@ public class RecomendedTrips extends AppCompatActivity {
     }
 }
 
-class RecomendedTripAdapter extends BaseAdapter
+class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.ViewHolder2>
 {
     Context context;
-    BaseTrip[] trips;
+    ArrayList<BaseTrip> trips;
     LayoutInflater inflater;
 
-    RecomendedTripAdapter(Context context, BaseTrip[] trips)
+    RecomendedTripAdapter(Context context, ArrayList<BaseTrip> trips)
     {
         this.context = context;
         this.trips = trips;
@@ -94,73 +91,63 @@ class RecomendedTripAdapter extends BaseAdapter
     }
 
     @Override
-    public int getCount() {
-        return trips.length;
+    public RecomendedTripAdapter.ViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
+        View tripCell = inflater.inflate(R.layout.recomended_trip_cell, parent, false);
+
+        RecomendedTripAdapter.ViewHolder2 vHolder=new ViewHolder2(tripCell);
+        return vHolder;
     }
 
     @Override
-    public Object getItem(int i) {
-        return trips[i];
-    }
+    public void onBindViewHolder(RecomendedTripAdapter.ViewHolder2 holder, int position) {
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
+        BaseTrip trip = trips.get(position);
+        holder.name.setText(trip.getName());
+        new ImageLoadTask(trip.getPhotoURL(), holder.cover).execute();
+        holder.rate.setRating(trip.getRate());
 
-    @Override
-    public View getView(final int i, View view, ViewGroup viewGroup) {
-
-        View tripCell = inflater.inflate(R.layout.recomended_trip_cell, viewGroup,false);
-        TextView name = (TextView) tripCell.findViewById(R.id.trip_name);
-        name.setText(trips[i].getName());
-        ImageView cover = (ImageView) tripCell.findViewById(R.id.trip_cover);
-        new ImageLoadTask(trips[i].getPhotoURL(), cover).execute();
-        RatingBar rate = (RatingBar) tripCell.findViewById(R.id.recomended_trip_rate);
-        rate.setRating(trips[i].getRate());
-
-        TextView att0 = (TextView) tripCell.findViewById(R.id.attraction0);
-        TextView att1 = (TextView) tripCell.findViewById(R.id.attraction1);
-        TextView att2 = (TextView) tripCell.findViewById(R.id.attraction2);
-
-        Iterator<String> iterator = trips[i].getAttractions().keySet().iterator();
-        switch(trips[i].getAttractions().size()) {
+        Iterator<String> iterator = trip.getAttractions().keySet().iterator();
+        switch(trip.getAttractions().size()) {
             case 0:
-                att0.setVisibility(View.INVISIBLE);
-                att1.setVisibility(View.INVISIBLE);
-                att2.setVisibility(View.INVISIBLE);
+                holder.att0.setVisibility(View.INVISIBLE);
+                holder.att1.setVisibility(View.INVISIBLE);
+                holder.att2.setVisibility(View.INVISIBLE);
                 break;
             case 1:
-                att0.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
-                att1.setVisibility(View.INVISIBLE);
-                att2.setVisibility(View.INVISIBLE);
+                holder.att0.setText(trip.getAttractions().get(iterator.next()).get("nazwa"));
+                holder.att1.setVisibility(View.INVISIBLE);
+                holder.att2.setVisibility(View.INVISIBLE);
                 break;
             case 2:
-                att0.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
-                att1.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
-                att2.setVisibility(View.INVISIBLE);
+                holder.att0.setText(trip.getAttractions().get(iterator.next()).get("nazwa"));
+                holder.att1.setText(trip.getAttractions().get(iterator.next()).get("nazwa"));
+                holder.att2.setVisibility(View.INVISIBLE);
                 break;
             default:
-                att0.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
-                att1.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
-                att2.setText(trips[i].getAttractions().get(iterator.next()).get("nazwa"));
+                holder.att0.setText(trip.getAttractions().get(iterator.next()).get("nazwa"));
+                holder.att1.setText(trip.getAttractions().get(iterator.next()).get("nazwa"));
+                holder.att2.setText(trip.getAttractions().get(iterator.next()).get("nazwa"));
                 break;
         }
+    }
 
-        tripCell.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                HashMap<String, LatLng> map = new HashMap<>();
-//                for(int j = 0; j < trips[i].getAttractions().size(); j++)
-//                {
-//                    map.put(trips[i].getAttractions().get(j).getNazwa(), trips[i].getAttractions().get(j).buildLocation());
-//                }
-                Intent intent = new Intent(context, TripOnMapActivity.class);
-                intent.putExtra("map", trips[i].getAttractions());
-                context.startActivity(intent);
-            }
-        });
+    @Override
+    public int getItemCount() {
+        return trips.size();
+    }
 
-        return tripCell;
+    public static class ViewHolder2 extends RecyclerView.ViewHolder {
+        TextView name, att0, att1, att2;
+        ImageView cover;
+        RatingBar rate;
+        ViewHolder2(View tripCell) {
+            super(tripCell);
+            name = (TextView)tripCell.findViewById(R.id.trip_name);
+            cover = (ImageView) tripCell.findViewById(R.id.trip_cover);
+            rate = (RatingBar) tripCell.findViewById(R.id.recomended_trip_rate);
+            att0 = (TextView) tripCell.findViewById(R.id.attraction0);
+            att1 = (TextView) tripCell.findViewById(R.id.attraction1);
+            att2 = (TextView) tripCell.findViewById(R.id.attraction2);
+        }
     }
 }
