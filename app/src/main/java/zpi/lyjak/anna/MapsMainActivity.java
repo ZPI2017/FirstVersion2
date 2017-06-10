@@ -2,6 +2,7 @@ package zpi.lyjak.anna;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -10,11 +11,24 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,6 +41,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,12 +51,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.zip.Inflater;
 
 import zpi.lignarski.janusz.AttDetailsFragment;
 import zpi.lyjak.anna.firstversion.R;
-import zpi.szymala.kasia.firstversion.ShowAtrakcje;
+import zpi.mazurek.tomasz.RollbackIfFailure;
 
 /**
  * @author Anna Łyjak
@@ -53,9 +77,26 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
     private GoogleApiClient mGoogleApiClient;
     private int MY_LOCATION_REQUEST_CODE = 100; //necessary to permission // w sumie to nie wiem jaka powinna być wielkość tego czegoś... w przykładach było 100, ale jak tego nie ustawiałam, to też działało xD
     private Location currentLocation; //current user's location
+    private RecyclerView myList;
+    ArrayList<String> categories;
+    HashMap<String, HashMap<String, LatLng>> atrakcje;
+    HashMap<String, Marker> markers;
+    HashMap<String, String> tagi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        loadAll();
+
+
+        categories = new ArrayList<>();
+        atrakcje = new HashMap<>();
+        markers = new HashMap<>();
+        tagi = new HashMap<>();
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_main);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -76,6 +117,11 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        myList = (RecyclerView) findViewById(R.id.possibleAttractions);
+        myList.setLayoutManager(layoutManager);
+
     }
 
     /**
@@ -89,30 +135,10 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+
         onLocationEnabled();
 
-        // Add a marker in Wrocław and move the camera
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                DatabaseReference mLocations = FirebaseDatabase.getInstance().getReference().child("locations");
-                mLocations.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot lokacja : dataSnapshot.getChildren()) {
-                            LatLng position = new LatLng((Double)lokacja.child("latitude").getValue(), (Double)lokacja.child("longitude").getValue());
-                            mMap.addMarker(new MarkerOptions().position(position).title(lokacja.child("nazwa").getValue().toString())).setTag(lokacja.getKey());
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Toast.makeText(MapsMainActivity.this, "Coś się z bało", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                return null;
-            }
-        }.execute();
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -129,6 +155,41 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
         });
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(wroclaw));
     }
+
+    public void loadAll()
+    {
+        DatabaseReference mData = FirebaseDatabase.getInstance().getReference();
+        mData.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot kategoria : dataSnapshot.child("categories").getChildren())
+                {
+                    String cat = (String) kategoria.child("name").getValue();
+                    categories.add(cat);
+                    atrakcje.put(cat, new HashMap<String, LatLng>());
+                    myList.setAdapter(new OptionsAdapter(getActivity(), categories));
+
+                }
+
+                for (DataSnapshot lokacja : dataSnapshot.child("locations").getChildren())
+                {
+                    LatLng position = new LatLng((Double) lokacja.child("latitude").getValue(), (Double) lokacja.child("longitude").getValue());
+                    atrakcje.get(lokacja.child("category").getValue().toString()).put((String) lokacja.child("nazwa").getValue(), position);
+                    tagi.put((String) lokacja.child("nazwa").getValue(), lokacja.getKey());
+                    //mMap.addMarker(new MarkerOptions().position(position).title(lokacja.child("nazwa").getValue().toString())).setTag(lokacja.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                Toast.makeText(MapsMainActivity.this, "Błąd bazy danych", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+
 
     /**
      * Getter for this activity
@@ -284,6 +345,79 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    private class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.Holder> {
+
+        Context context;
+        LayoutInflater inflater;
+        ArrayList<String> options;
+
+        OptionsAdapter(Context context, ArrayList<String> options) {
+            this.context = context;
+            this.options = options;
+            inflater = LayoutInflater.from(context);
+
+        }
+
+
+        @Override
+        public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View cell = inflater.inflate(R.layout.options_cell, parent, false);
+
+            OptionsAdapter.Holder vHolder = new Holder(cell);
+            return vHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(Holder holder, int position) {
+
+            final String option = options.get(position);
+
+            TextView label = holder.name;
+            label.setText(option);
+            CheckBox checkBox = holder.checkBox;
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (compoundButton.isChecked()) {
+                        HashMap<String, LatLng> temp = atrakcje.get(option);
+                        for (Map.Entry<String,LatLng> pair : temp.entrySet()){
+                            String tag = tagi.get(pair.getKey());
+                            MarkerOptions mark = new MarkerOptions().position(pair.getValue()).title(pair.getKey());
+                            markers.put(pair.getKey(), mMap.addMarker(mark));
+                            markers.get(pair.getKey()).setTag(tag);
+                        }
+
+                    } else {
+                        HashMap<String, LatLng> temp = atrakcje.get(option);
+                        for (Map.Entry<String,LatLng> pair : temp.entrySet()){
+                            markers.get(pair.getKey()).remove();
+                            tagi.remove(pair.getKey());
+                            markers.remove(pair.getKey());
+                        }
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return options.size();
+        }
+
+
+        public class Holder extends RecyclerView.ViewHolder {
+            TextView name;
+            CheckBox checkBox;
+
+            Holder(View cell) {
+                super(cell);
+                name = (TextView) cell.findViewById(R.id.optionLabel);
+                checkBox = (CheckBox) cell.findViewById(R.id.optionCheck);
+            }
+        }
     }
 
 }

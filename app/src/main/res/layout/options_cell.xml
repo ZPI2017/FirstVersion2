@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="60dp"
+    android:background="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
+    android:minWidth="100dp">
+
+    <TextView
+        android:id="@+id/optionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/optionCheck"
+        android:layout_centerHorizontal="true"
+        android:text="TextView"
+        android:textColor="@color/cardview_light_background" />
+
+    <CheckBox
+        android:id="@+id/optionCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:buttonTint="@color/cardview_light_background" />
+</RelativeLayout>
