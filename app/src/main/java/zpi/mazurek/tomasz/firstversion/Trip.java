@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import zpi.lyjak.anna.DayOfTrip;
 import zpi.szymala.kasia.firstversion.Atrakcja;
 
 /**
@@ -15,9 +16,17 @@ public class Trip {
     private final Calendar startDate;
     private Calendar endDate;
     private boolean isFinished;
-    private long tripTime;
-    private int rate;
-    private String name;
+
+    //potrzebne do sqla:
+    private String tripId;
+    private String idSpectacularAttraction;
+    private ArrayList<DayOfTrip> days;
+
+    private long tripTime; //
+    private int rate; //
+    private String name; //
+
+    //porponuję przerzucić do DayOfTrip:
     ArrayList<Atrakcja> attractions;
 
     public Trip()

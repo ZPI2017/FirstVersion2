@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 public class Atrakcja {
 
+    private String id;
     private String nazwa;
     private String szczegoly;
     private String zdjecieURL;
