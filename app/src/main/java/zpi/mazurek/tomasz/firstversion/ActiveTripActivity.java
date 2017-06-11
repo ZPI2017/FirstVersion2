@@ -1,31 +1,54 @@
 package zpi.mazurek.tomasz.firstversion;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
+import zpi.lignarski.janusz.CreateTripActivity;
 import zpi.lyjak.anna.firstversion.R;
+import zpi.szymala.kasia.firstversion.Atrakcja;
 
 public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    public LatLng currentlatLng;
+    private Location currentLocation;
     private Trip activeTrip;
     private TextView label;
     private ImageButton button;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private boolean isTripOn;
+    private ArrayList<Location> locations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +58,28 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
         label = (TextView) findViewById(R.id.add_finish_label);
         button = (ImageButton) findViewById(R.id.add_finish_button);
 
-        if(activeTrip == null)
-        {
-            label.setText("Dodaj aktywną wycieczkę");
-            button.setImageResource(R.drawable.add_icon);
-        }
-        else
-        {
-            label.setText("Zakończ wycieczkę");
-            button.setImageResource(R.drawable.confirm_icon);
-        }
+
+        locations = new ArrayList<>();
+        activeTrip = new Trip();
+        activeTrip.addAttraction(new Atrakcja("Cokolwiek","Super atrakcja", "R.drawable.hala", 51.110199, 17.031705));
+        activeTrip.addAttraction(new Atrakcja("Cokolwiek2","Super atrakcja", "R.drawable.hala", 51.150199, 17.071705));
+
+
+        setButtonText();
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isTripOn)
+                {
+                    clickEnd();
+                }
+                else
+                {
+                    clickAdd();
+                }
+            }
+        });
 
         SupportMapFragment mapFragment = new SupportMapFragment();
         mapFragment.getMapAsync(this);
@@ -68,11 +103,25 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        if(isTripOn)
+        {
+            addTripMarkes();
+        }
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    public void onConnected(Bundle bundle) {
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            currentlatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        }
+        else
+            currentlatLng = new LatLng(51.110199, 17.031705);
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentlatLng, 13));
     }
 
     @Override
@@ -86,4 +135,123 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
         Toast.makeText(this, "Połączenie się z Google Map's nie było możliwe", Toast.LENGTH_SHORT).show();
 
     }
+
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    public void addTripMarkes()
+    {
+        ArrayList<Atrakcja> atractions = activeTrip.getAttractions();
+        for (Atrakcja att: atractions)
+        {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(att.getLatitude(), att.getLongitude())).title(att.getNazwa()));
+            Location targetLocation = new Location("");
+            targetLocation.setLatitude(att.getLatitude());
+            targetLocation.setLongitude(att.getLongitude());
+            locations.add(targetLocation);
+        }
+    }
+
+    public void clickEnd()
+    {
+        final Dialog rankDialog = new Dialog(ActiveTripActivity.this, R.style.FullHeightDialog);
+        rankDialog.setContentView(R.layout.rank_dialog);
+        RatingBar ratingBar = (RatingBar)rankDialog.findViewById(R.id.new_trip_rate);
+        ratingBar.setEnabled(true);
+
+        Button yes = (Button) rankDialog.findViewById(R.id.yes_button);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isTripOn = false;
+                activeTrip = null;
+                mMap.clear();
+                setButtonText();
+                rankDialog.dismiss();
+            }
+
+        });
+        Button no = (Button) rankDialog.findViewById(R.id.no_button);
+        no.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                rankDialog.dismiss();
+            }
+        });
+        rankDialog.show();
+    }
+
+    public void clickAdd()
+    {
+        final Dialog rankDialog = new Dialog(ActiveTripActivity.this, R.style.FullHeightDialog);
+        rankDialog.setContentView(R.layout.add_dialog);
+
+        Button generate = (Button) rankDialog.findViewById(R.id.generate_button);
+        generate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rankDialog.dismiss();
+                Intent intent = new Intent(v.getContext(), CreateTripActivity.class);
+                startActivity(intent);
+
+            }
+
+        });
+        Button choose = (Button) rankDialog.findViewById(R.id.choose_button);
+        choose.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                rankDialog.dismiss();
+                Intent intent = new Intent(v.getContext(), RecomendedTrips.class);
+                startActivity(intent);
+            }
+        });
+        rankDialog.show();
+    }
+
+    public void setButtonText()
+    {
+        if (activeTrip == null) {
+            isTripOn = false;
+            label.setText("Dodaj aktywną wycieczkę");
+            button.setImageResource(R.drawable.add_icon);
+        } else {
+            isTripOn = true;
+            label.setText("Zakończ wycieczkę");
+            button.setImageResource(R.drawable.confirm_icon);
+        }
+    }
+
+
+    /*public void drawRoute()
+    {
+        ArrayList<Location> temporary = locations;
+        float minimum = Float.MAX_VALUE;
+        Location current = currentLocation;
+        Location temp;
+
+        while(temporary.size() > 0) {
+            for (Location location : locations) {
+                if (currentLocation.distanceTo(location) < minimum) {
+                    temp = location;
+                    minimum = currentLocation.distanceTo(location);
+                }
+
+            }
+        }
+
+    }
+    */
+
 }

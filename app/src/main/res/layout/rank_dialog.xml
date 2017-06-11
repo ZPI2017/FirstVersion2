@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/wallet_highlighted_text_holo_light"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/yes_button"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_trip_rate"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="60dp"
+        android:text="Tak" />
+
+    <Button
+        android:id="@+id/no_button"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/yes_button"
+        android:layout_below="@+id/new_trip_rate"
+        android:layout_marginLeft="150dp"
+        android:text="Nie" />
+
+    <RatingBar
+        android:id="@+id/new_trip_rate"
+        style="@style/RatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/desc"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:numStars="6"
+        android:stepSize="1" />
+
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_label"
+        android:layout_centerHorizontal="true"
+        android:text="Możesz ocenić wycieczkę"
+        android:textColor="@color/cast_expanded_controller_background_color"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/top_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@color/cast_intro_overlay_button_background_color"
+        android:padding="2dp"
+        android:text="Czy chcesz zakończyć wycieczkę?"
+        android:textAlignment="center"
+        android:textColor="@color/cast_expanded_controller_background_color"
+        android:textSize="18sp"
+        tools:text="Czy chcesz zakończyć wycieczkę?" />
+</RelativeLayout>

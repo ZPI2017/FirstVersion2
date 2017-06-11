@@ -82,6 +82,11 @@ public class Trip {
         return result;
     }
 
+    public ArrayList<Atrakcja> getAttractions()
+    {
+        return attractions;
+    }
+
     public void addAttraction(Atrakcja attraction)
     {
         attractions.add(attraction);

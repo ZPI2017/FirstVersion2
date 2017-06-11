@@ -46,7 +46,7 @@
 
             <RatingBar
                 android:id="@+id/recomended_trip_rate"
-                style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
+                style="@style/RatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/trip_cover"

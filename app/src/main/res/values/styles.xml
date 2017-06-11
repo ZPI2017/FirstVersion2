@@ -10,4 +10,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="FullHeightDialog" parent="android:style/Theme.Holo.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="RatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="colorControlActivated">#FFFD00</item>
+        <item name="colorControlNormal">#FFFDA2</item>
+    </style>
+
+
 </resources>
