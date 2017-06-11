@@ -49,6 +49,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import zpi.lignarski.janusz.AttDetailsFragment;
+import zpi.lignarski.janusz.Category;
 import zpi.lyjak.anna.firstversion.R;
 
 /**
@@ -64,7 +65,7 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
     private int MY_LOCATION_REQUEST_CODE = 100; //necessary to permission // w sumie to nie wiem jaka powinna być wielkość tego czegoś... w przykładach było 100, ale jak tego nie ustawiałam, to też działało xD
     private Location currentLocation; //current user's location
     private RecyclerView myList;
-    ArrayList<String> categories;
+    ArrayList<Category> categories;
     HashMap<String, HashMap<String, LatLng>> atrakcje;
     HashMap<String, Marker> markers;
     HashMap<String, String> tagi;
@@ -150,9 +151,9 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot kategoria : dataSnapshot.getChildren())
                 {
-                    String cat = (String) kategoria.child("name").getValue();
+                    Category cat = kategoria.getValue(Category.class);
                     categories.add(cat);
-                    atrakcje.put(cat, new HashMap<String, LatLng>());
+                    atrakcje.put(cat.getId(), new HashMap<String, LatLng>());
                     myList.setAdapter(new OptionsAdapter(getActivity(), categories));
 
                 }
@@ -347,9 +348,9 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
 
         Context context;
         LayoutInflater inflater;
-        ArrayList<String> options;
+        ArrayList<Category> options;
 
-        OptionsAdapter(Context context, ArrayList<String> options) {
+        OptionsAdapter(Context context, ArrayList<Category> options) {
             this.context = context;
             this.options = options;
             inflater = LayoutInflater.from(context);
@@ -369,16 +370,16 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
         @Override
         public void onBindViewHolder(Holder holder, int position) {
 
-            final String option = options.get(position);
+            final Category option = options.get(position);
 
             TextView label = holder.name;
-            label.setText(option);
+            label.setText(option.getName());
             CheckBox checkBox = holder.checkBox;
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (compoundButton.isChecked()) {
-                        HashMap<String, LatLng> temp = atrakcje.get(option);
+                        HashMap<String, LatLng> temp = atrakcje.get(option.getId());
                         for (Map.Entry<String,LatLng> pair : temp.entrySet()){
                             String tag = tagi.get(pair.getKey());
                             MarkerOptions mark = new MarkerOptions().position(pair.getValue()).title(pair.getKey());
@@ -387,7 +388,7 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
                         }
 
                     } else {
-                        HashMap<String, LatLng> temp = atrakcje.get(option);
+                        HashMap<String, LatLng> temp = atrakcje.get(option.getId());
                         for (Map.Entry<String,LatLng> pair : temp.entrySet()){
                             markers.get(pair.getKey()).remove();
                             tagi.remove(pair.getKey());
