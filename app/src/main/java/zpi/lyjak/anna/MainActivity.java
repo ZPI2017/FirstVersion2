@@ -25,6 +25,7 @@ import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import yalantis.com.sidemenu.model.SlideMenuItem;
 import yalantis.com.sidemenu.util.ViewAnimator;
 import zpi.lignarski.janusz.CreateTripActivity;
+import zpi.mazurek.tomasz.firstversion.ActiveTripActivity;
 import zpi.mazurek.tomasz.firstversion.RecomendedTrips;
 import zpi.mazurek.tomasz.firstversion.TripHistoryActivity;
 import zpi.lyjak.anna.firstversion.R;
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     }
 
     private void createMenuList() {
+        SlideMenuItem activeTrip = new SlideMenuItem("Active Trip", R.drawable.active_icon);
+        list.add(activeTrip);
+
         SlideMenuItem recomendedTrips = new SlideMenuItem("Recomended Trips", R.drawable.heart);
         list.add(recomendedTrips);
 
@@ -177,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     public ScreenShotable onSwitch(Resourceble slideMenuItem, ScreenShotable screenShotable, int position) {
         switch (slideMenuItem.getName()) {
             case ExampleFragment.CLOSE:
+                return screenShotable;
+            case "Active Trip":
+                startActivity(new Intent(this, ActiveTripActivity.class));
                 return screenShotable;
             case "Trip History":
                 startActivity(new Intent(this, TripHistoryActivity.class));
