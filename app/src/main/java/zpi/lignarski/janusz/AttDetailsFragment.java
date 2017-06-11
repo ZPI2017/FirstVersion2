@@ -31,6 +31,7 @@ public class AttDetailsFragment extends Fragment {
     ImageView imageView;
     TextView textViewName;
     TextView textViewDesc;
+    TextView textViewHours;
 
     public AttDetailsFragment() {
         // Required empty public constructor
@@ -50,6 +51,7 @@ public class AttDetailsFragment extends Fragment {
         imageView = (ImageView) getView().findViewById(R.id.attDetailsIm);
         textViewName = (TextView) getView().findViewById(R.id.attDetailsName);
         textViewDesc = (TextView) getView().findViewById(R.id.attDetailDesc);
+        textViewHours = (TextView) getView().findViewById(R.id.attDetailsHours);
         DatabaseReference mAtrakcje = FirebaseDatabase.getInstance().getReference().child("places");
         mAtrakcje.child(mAttId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -69,5 +71,8 @@ public class AttDetailsFragment extends Fragment {
         textViewName.setText(atrakcja.getNazwa());
         textViewDesc.setText(atrakcja.getSzczegoly());
         new ImageLoadTask(atrakcja.getZdjecieURL(), imageView).execute();
+        if (atrakcja.isZawszeOtwarte())
+            textViewHours.setVisibility(View.GONE);
+        textViewHours.setText(atrakcja.buildGodzinyOtwarcia());
     }
 }
