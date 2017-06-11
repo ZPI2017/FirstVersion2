@@ -134,7 +134,7 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
                 b.putString("attId", marker.getTag().toString());
                 fragment.setArguments(b);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.map, fragment);
+                transaction.replace(R.id.mainContainer, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -144,11 +144,11 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
 
     public void loadAll()
     {
-        DatabaseReference mData = FirebaseDatabase.getInstance().getReference();
-        mData.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference mData = FirebaseDatabase.getInstance().getReference();
+        mData.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot kategoria : dataSnapshot.child("categories").getChildren())
+                for(DataSnapshot kategoria : dataSnapshot.getChildren())
                 {
                     String cat = (String) kategoria.child("name").getValue();
                     categories.add(cat);
@@ -156,14 +156,24 @@ public class MapsMainActivity extends FragmentActivity implements OnMapReadyCall
                     myList.setAdapter(new OptionsAdapter(getActivity(), categories));
 
                 }
+                mData.child("locations").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot lokacja : dataSnapshot.getChildren())
+                        {
+                            LatLng position = new LatLng((Double) lokacja.child("latitude").getValue(), (Double) lokacja.child("longitude").getValue());
+                            atrakcje.get(lokacja.child("category").getValue().toString()).put((String) lokacja.child("nazwa").getValue(), position);
+                            tagi.put((String) lokacja.child("nazwa").getValue(), lokacja.getKey());
+                            //mMap.addMarker(new MarkerOptions().position(position).title(lokacja.child("nazwa").getValue().toString())).setTag(lokacja.getKey());
+                        }
+                    }
 
-                for (DataSnapshot lokacja : dataSnapshot.child("locations").getChildren())
-                {
-                    LatLng position = new LatLng((Double) lokacja.child("latitude").getValue(), (Double) lokacja.child("longitude").getValue());
-                    atrakcje.get(lokacja.child("category").getValue().toString()).put((String) lokacja.child("nazwa").getValue(), position);
-                    tagi.put((String) lokacja.child("nazwa").getValue(), lokacja.getKey());
-                    //mMap.addMarker(new MarkerOptions().position(position).title(lokacja.child("nazwa").getValue().toString())).setTag(lokacja.getKey());
-                }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(MapsMainActivity.this, "Błąd bazy danych", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
             }
 
             @Override
