@@ -66,28 +66,8 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
 
 
         setActionBar();
-        createMenuList();
+        list = MenuCreator.createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
-    }
-
-    private void createMenuList() {
-        SlideMenuItem activeTrip = new SlideMenuItem("Active Trip", R.drawable.active_icon);
-        list.add(activeTrip);
-
-        SlideMenuItem recomendedTrips = new SlideMenuItem("Recomended Trips", R.drawable.heart);
-        list.add(recomendedTrips);
-
-        SlideMenuItem mapOpen = new SlideMenuItem("Map", R.drawable.mapiconmini);
-        list.add(mapOpen);
-
-        SlideMenuItem addTrip = new SlideMenuItem("Add Trips", R.drawable.create);
-        list.add(addTrip);
-
-        SlideMenuItem details = new SlideMenuItem("Details", R.drawable.details);
-        list.add(details);
-
-        SlideMenuItem history = new SlideMenuItem("Trip History", R.drawable.history_icon);
-        list.add(history);
     }
 
     private void setActionBar() {
@@ -137,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -158,24 +137,24 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         }
     }
 
-    private ScreenShotable replaceFragment(ScreenShotable screenShotable, int topPosition) {
-        this.res = this.res == R.drawable.content_music ? R.drawable.content_films : R.drawable.content_music;
-        View view = findViewById(R.id.content_frame);
-        int finalRadius = Math.max(view.getWidth(), view.getHeight());
-        Animator animator = null;
-        //TODO MENU DZIALA TYLKO DLA API >= 21!
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            animator = ViewAnimationUtils.createCircularReveal(view, 0, topPosition, 0, finalRadius);
-        }
-        animator.setInterpolator(new AccelerateInterpolator());
-        animator.setDuration(ViewAnimator.CIRCULAR_REVEAL_ANIMATION_DURATION);
-
-        findViewById(R.id.content_overlay).setBackgroundDrawable(new BitmapDrawable(getResources(), screenShotable.getBitmap()));
-        animator.start();
-        ExampleFragment contentFragment = ExampleFragment.newInstance(this.res);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
-        return contentFragment;
-    }
+//    private ScreenShotable replaceFragment(ScreenShotable screenShotable, int topPosition) {
+//        this.res = this.res == R.drawable.content_music ? R.drawable.content_films : R.drawable.content_music;
+//        View view = findViewById(R.id.content_frame);
+//        int finalRadius = Math.max(view.getWidth(), view.getHeight());
+//        Animator animator = null;
+//        //TODO MENU DZIALA TYLKO DLA API >= 21!
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//            animator = ViewAnimationUtils.createCircularReveal(view, 0, topPosition, 0, finalRadius);
+//        }
+//        animator.setInterpolator(new AccelerateInterpolator());
+//        animator.setDuration(ViewAnimator.CIRCULAR_REVEAL_ANIMATION_DURATION);
+//
+//        findViewById(R.id.content_overlay).setBackgroundDrawable(new BitmapDrawable(getResources(), screenShotable.getBitmap()));
+//        animator.start();
+//        ExampleFragment contentFragment = ExampleFragment.newInstance(this.res);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
+//        return contentFragment;
+//    }
 
     @Override
     public ScreenShotable onSwitch(Resourceble slideMenuItem, ScreenShotable screenShotable, int position) {
@@ -201,7 +180,8 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 startActivity(new Intent(this, ShowAtrakcje.class));
                 return screenShotable;
             default:
-                return replaceFragment(screenShotable, position);
+                startActivity(new Intent(this, MapsMainActivity.class));
+                return screenShotable;
         }
     }
 

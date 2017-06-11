@@ -1,10 +1,13 @@
 package zpi.szymala.kasia.firstversion;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -16,13 +19,22 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import yalantis.com.sidemenu.interfaces.Resourceble;
+import yalantis.com.sidemenu.interfaces.ScreenShotable;
+import yalantis.com.sidemenu.util.ViewAnimator;
+import zpi.lignarski.janusz.CreateTripActivity;
+import zpi.lyjak.anna.MapsMainActivity;
 import zpi.lyjak.anna.firstversion.R;
+import zpi.lyjak.anna.fragments.ExampleFragment;
+import zpi.mazurek.tomasz.firstversion.ActiveTripActivity;
+import zpi.mazurek.tomasz.firstversion.RecomendedTrips;
+import zpi.mazurek.tomasz.firstversion.TripHistoryActivity;
 
 /**
  * Created by Katarzyna on 2017-05-21.
  */
 
-public class ShowAtrakcje extends AppCompatActivity {
+public class ShowAtrakcje extends AppCompatActivity implements ViewAnimator.ViewAnimatorListener {
     public RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List<Atrakcja> myDataset;
@@ -94,4 +106,52 @@ public class ShowAtrakcje extends AppCompatActivity {
 //        myDataset.add(atrakcja);
 
     }
+
+    @Override
+    public ScreenShotable onSwitch(Resourceble slideMenuItem, ScreenShotable screenShotable, int position) {
+        switch (slideMenuItem.getName()) {
+            case ExampleFragment.CLOSE:
+                return screenShotable;
+            case "Active Trip":
+                startActivity(new Intent(this, ActiveTripActivity.class));
+                return screenShotable;
+            case "Trip History":
+                startActivity(new Intent(this, TripHistoryActivity.class));
+                return screenShotable;
+            case "Recomended Trips":
+                startActivity(new Intent(this, RecomendedTrips.class));
+                return screenShotable;
+            case "Map":
+                startActivity(new Intent(this, MapsMainActivity.class));
+                return screenShotable;
+            case "Add Trips":
+                startActivity(new Intent(this, CreateTripActivity.class));
+                return screenShotable;
+            case "Details":
+                startActivity(new Intent(this, ShowAtrakcje.class));
+                return screenShotable;
+            default:
+                startActivity(new Intent(this, MapsMainActivity.class));
+                return screenShotable;
+        }
+    }
+
+    @Override
+    public void disableHomeButton() {
+        getSupportActionBar().setHomeButtonEnabled(false);
+    }
+
+    @Override
+    public void enableHomeButton() {
+        getSupportActionBar().setHomeButtonEnabled(true);
+//        drawerLayout.closeDrawers();
+    }
+
+    @Override
+    public void addViewToContainer(View view) {
+        linearLayout.addView(view);
+    }
+    private LinearLayout linearLayout;
+
+
 }

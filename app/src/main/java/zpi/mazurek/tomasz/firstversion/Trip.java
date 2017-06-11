@@ -22,7 +22,7 @@ public class Trip {
 
     public Trip()
     {
-        name = "";
+        name = "Wycieczka";
         isFinished = false;
         endDate = null;
         startDate = Calendar.getInstance();
@@ -82,13 +82,44 @@ public class Trip {
         return result;
     }
 
-    public ArrayList<Atrakcja> getAttractions()
-    {
-        return attractions;
-    }
-
     public void addAttraction(Atrakcja attraction)
     {
         attractions.add(attraction);
+    }
+
+    public void setEndDate(Calendar endDate) {
+        this.endDate = endDate;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        isFinished = finished;
+    }
+
+    public long getTripTime() {
+        return tripTime;
+    }
+
+    public void setTripTime(long tripTime) {
+        this.tripTime = tripTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<Atrakcja> getAttractions() {
+        return attractions;
+    }
+
+    public void setAttractions(ArrayList<Atrakcja> attractions) {
+        this.attractions = attractions;
     }
 }

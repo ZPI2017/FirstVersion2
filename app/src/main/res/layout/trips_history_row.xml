@@ -34,14 +34,15 @@
 
     <RatingBar
         android:id="@+id/trip_rate"
-        android:numStars="6"
-        android:stepSize="1"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trip_duration"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:numStars="6"
+        android:stepSize="1" />
 
     <ImageView
         android:id="@+id/imageView"
