@@ -28,12 +28,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
 import zpi.lignarski.janusz.CreateTripActivity;
+import zpi.lyjak.anna.MainActivity;
 import zpi.lyjak.anna.firstversion.R;
 import zpi.szymala.kasia.firstversion.Atrakcja;
 
@@ -42,13 +45,12 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
 
     public LatLng currentlatLng;
     private Location currentLocation;
-    private Trip activeTrip;
     private TextView label;
     private ImageButton button;
+    private Button changeButton;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private boolean isTripOn;
-    private ArrayList<Location> locations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +59,9 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
 
         label = (TextView) findViewById(R.id.add_finish_label);
         button = (ImageButton) findViewById(R.id.add_finish_button);
-
-
-        locations = new ArrayList<>();
-        activeTrip = new Trip();
-        activeTrip.addAttraction(new Atrakcja("Cokolwiek","Super atrakcja", "R.drawable.hala", 51.110199, 17.031705));
-        activeTrip.addAttraction(new Atrakcja("Cokolwiek2","Super atrakcja", "R.drawable.hala", 51.150199, 17.071705));
-
+        changeButton = (Button) findViewById(R.id.visited);
+        changeButton.setVisibility(View.INVISIBLE);
+        changeButton.setClickable(false);
 
         setButtonText();
 
@@ -95,11 +93,20 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
                     .addApi(LocationServices.API)
                     .build();
         }
-
-
     }
 
     @Override
+    protected void onResume()
+    {
+        if(mMap != null) {
+            addTripMarkes();
+            setButtonText();
+        }
+        super.onResume();
+    }
+
+
+        @Override
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
@@ -107,6 +114,47 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
         {
             addTripMarkes();
         }
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(final Marker marker) {
+                if(MainActivity.visitedAtractions.get(marker.getTitle()))
+                {
+                    marker.showInfoWindow();
+                    changeButton.setText("Nie odwiedzono");
+                    changeButton.setClickable(true);
+                    changeButton.setVisibility(View.VISIBLE);
+                    changeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                            MainActivity.visitedAtractions.put(marker.getTitle(),false);
+                            changeButton.setClickable(false);
+                            changeButton.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }
+                else
+                {
+                    marker.showInfoWindow();
+                    changeButton.setText("Odwiedzono");
+                    changeButton.setClickable(true);
+                    changeButton.setVisibility(View.VISIBLE);
+                    changeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            MainActivity.visitedAtractions.put(marker.getTitle(),true);
+                            changeButton.setClickable(false);
+                            changeButton.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }
+                return true;
+            }
+        });
+
+
     }
 
     @Override
@@ -150,14 +198,21 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
 
     public void addTripMarkes()
     {
-        ArrayList<Atrakcja> atractions = activeTrip.getAttractions();
+        mMap.clear();
+        ArrayList<Atrakcja> atractions = MainActivity.activeTrip.getAttractions();
+        float color;
         for (Atrakcja att: atractions)
         {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(att.getLatitude(), att.getLongitude())).title(att.getNazwa()));
-            Location targetLocation = new Location("");
-            targetLocation.setLatitude(att.getLatitude());
-            targetLocation.setLongitude(att.getLongitude());
-            locations.add(targetLocation);
+            if(MainActivity.visitedAtractions.get(att.getNazwa()))
+            {
+                color = BitmapDescriptorFactory.HUE_GREEN;
+            }
+            else
+            {
+                color = BitmapDescriptorFactory.HUE_RED;
+            }
+                mMap.addMarker(new MarkerOptions().position(new LatLng(att.getLatitude(),
+                        att.getLongitude())).title(att.getNazwa()).icon(BitmapDescriptorFactory.defaultMarker(color)));
         }
     }
 
@@ -173,7 +228,7 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
                 isTripOn = false;
-                activeTrip = null;
+                MainActivity.activeTrip = null;
                 mMap.clear();
                 setButtonText();
                 rankDialog.dismiss();
@@ -222,7 +277,7 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
 
     public void setButtonText()
     {
-        if (activeTrip == null) {
+        if (MainActivity.activeTrip == null) {
             isTripOn = false;
             label.setText("Dodaj aktywną wycieczkę");
             button.setImageResource(R.drawable.add_icon);
@@ -232,6 +287,7 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
             button.setImageResource(R.drawable.confirm_icon);
         }
     }
+
 
 
     /*public void drawRoute()

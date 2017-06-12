@@ -38,6 +38,7 @@ import zpi.lignarski.janusz.ImageLoadTask;
 import zpi.lyjak.anna.DayOfTrip;
 import zpi.lyjak.anna.MainActivity;
 import zpi.lyjak.anna.firstversion.R;
+import zpi.szymala.kasia.firstversion.Atrakcja;
 
 public class RecomendedTrips extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -89,6 +90,8 @@ public class RecomendedTrips extends AppCompatActivity implements DatePickerDial
         calendarEnd.set(year, month, (int) (dayOfMonth+chosenTrip.getEstimatedTime()-1));
         newTrip.setEndDate(calendarEnd);
 
+        //newTrip.addAttraction(new Atrakcja("Hala", "", "", 51.110199, 17.031705));
+
         //TODO być może dodać ajdik
 
         chosenTrip.buildTripDays(calendar, this);
@@ -98,7 +101,15 @@ public class RecomendedTrips extends AppCompatActivity implements DatePickerDial
         newTrip.setDays(days);
 
         //TODO mamy gotową wycieczkę
+
+        //TODO Otrzymana wycieczka nie importuje atrakcji
+        
         MainActivity.activeTrip = newTrip;
+        MainActivity.visitedAtractions = new HashMap<>();
+
+        for (Atrakcja att: newTrip.getAttractions()) {
+            MainActivity.visitedAtractions.put(att.getNazwa(), false);
+        }
 
         Toast.makeText(this, "Zaimportowano wycieczkę", Toast.LENGTH_LONG).show();
         finish();
@@ -203,11 +214,18 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
 
         @Override
         public boolean onLongClick(View v) {
-            ((RecomendedTrips) context).chosenTrip = trips.get(getAdapterPosition());
-            DialogFragment fragment = new DatePickerFragment();
-            fragment.show(((AppCompatActivity)context).getSupportFragmentManager(), "datePicker");
-            Toast.makeText(context, "Wybierz datę rozpoczęcia", Toast.LENGTH_LONG).show();
-            return true;
+            if(MainActivity.activeTrip != null)
+            {
+                Toast.makeText(context, "Zakończ najpierw bieżącą wycieczkę!", Toast.LENGTH_LONG).show();
+                return true;
+            }
+            else {
+                ((RecomendedTrips) context).chosenTrip = trips.get(getAdapterPosition());
+                DialogFragment fragment = new DatePickerFragment();
+                fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datePicker");
+                Toast.makeText(context, "Wybierz datę rozpoczęcia", Toast.LENGTH_LONG).show();
+                return true;
+            }
         }
     }
 }

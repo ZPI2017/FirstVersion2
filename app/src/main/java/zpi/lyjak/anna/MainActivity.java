@@ -18,6 +18,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import yalantis.com.sidemenu.interfaces.Resourceble;
@@ -31,6 +32,7 @@ import zpi.mazurek.tomasz.firstversion.Trip;
 import zpi.mazurek.tomasz.firstversion.TripHistoryActivity;
 import zpi.lyjak.anna.firstversion.R;
 import zpi.lyjak.anna.fragments.ExampleFragment;
+import zpi.szymala.kasia.firstversion.Atrakcja;
 import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 
 /**
@@ -39,6 +41,7 @@ import zpi.szymala.kasia.firstversion.ShowAtrakcje;
 public class MainActivity extends AppCompatActivity implements ViewAnimator.ViewAnimatorListener {
 
     public static Trip activeTrip;
+    public static HashMap<String, Boolean> visitedAtractions;
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;

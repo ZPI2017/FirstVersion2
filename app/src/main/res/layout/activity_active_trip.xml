@@ -39,7 +39,28 @@
             android:labelFor="@id/add_finish_button"
             android:text="Zakończ wycieczkę"
             android:textColor="@color/cast_intro_overlay_background_color"
-            android:textSize="21sp" />
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/line"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/add_finish_label"
+            android:layout_toRightOf="@+id/add_finish_label"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            app:srcCompat="@color/common_google_signin_btn_text_light_disabled" />
+
+        <Button
+            android:id="@+id/visited"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/line"
+            android:layout_toRightOf="@+id/line"
+            android:text="Zmień status"
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
