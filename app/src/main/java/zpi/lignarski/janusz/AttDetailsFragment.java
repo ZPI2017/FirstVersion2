@@ -37,11 +37,17 @@ public class AttDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public AttDetailsFragment(Atrakcja at) {
+        atrakcja = at;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        mAttId = args.getString("attId", "-1");
+        if (atrakcja == null) {
+            Bundle args = getArguments();
+            mAttId = args.getString("attId", "-1");
+        }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_att_details, container, false);
     }
@@ -52,19 +58,23 @@ public class AttDetailsFragment extends Fragment {
         textViewName = (TextView) getView().findViewById(R.id.attDetailsName);
         textViewDesc = (TextView) getView().findViewById(R.id.attDetailDesc);
         textViewHours = (TextView) getView().findViewById(R.id.attDetailsHours);
-        DatabaseReference mAtrakcje = FirebaseDatabase.getInstance().getReference().child("places");
-        mAtrakcje.child(mAttId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                atrakcja = dataSnapshot.getValue(Atrakcja.class);
-                prepareData();
-            }
+        if (atrakcja == null) {
+            DatabaseReference mAtrakcje = FirebaseDatabase.getInstance().getReference().child("places");
+            mAtrakcje.child(mAttId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    atrakcja = dataSnapshot.getValue(Atrakcja.class);
+                    prepareData();
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
+        else
+            prepareData();
     }
 
     private void prepareData() {

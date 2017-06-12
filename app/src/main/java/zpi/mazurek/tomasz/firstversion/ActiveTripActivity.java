@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import zpi.lignarski.janusz.AttDetailsFragment;
 import zpi.lignarski.janusz.CreateTripActivity;
 import zpi.lyjak.anna.MainActivity;
 import zpi.lyjak.anna.firstversion.R;
@@ -163,6 +164,17 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    AttDetailsFragment fragment = new AttDetailsFragment((Atrakcja)marker.getTag());
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.activeTripLayout, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
+
 
     }
 
@@ -218,7 +230,7 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
                     color = BitmapDescriptorFactory.HUE_RED;
                 }
                 mMap.addMarker(new MarkerOptions().position(new LatLng(att.getLatitude(),
-                        att.getLongitude())).title(att.getNazwa()).icon(BitmapDescriptorFactory.defaultMarker(color)));
+                        att.getLongitude())).title(att.getNazwa()).icon(BitmapDescriptorFactory.defaultMarker(color))).setTag(att);
             }
         }
     }
