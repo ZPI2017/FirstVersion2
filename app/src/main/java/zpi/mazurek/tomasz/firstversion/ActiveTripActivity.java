@@ -104,9 +104,11 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
     protected void onResume()
     {
         if(mMap != null) {
-            if(isTripOn)
+            isTripOn = MainActivity.activeTrip != null;
+            if(isTripOn) {
                 whichDayOfTrip();
-            addTripMarkes();
+                addTripMarkes();
+            }
             setButtonText();
         }
         super.onResume();
@@ -206,20 +208,18 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
     public void addTripMarkes()
     {
         mMap.clear();
-        ArrayList<Atrakcja> atractions = MainActivity.activeTrip.getDays().get(day).getAttractions();
-        float color;
-        for (Atrakcja att: atractions)
-        {
-            if(MainActivity.visitedAtractions.get(att.getNazwa()))
-            {
-                color = BitmapDescriptorFactory.HUE_GREEN;
-            }
-            else
-            {
-                color = BitmapDescriptorFactory.HUE_RED;
-            }
+        if(MainActivity.activeTrip.getDays().size() > day && day >= 0) {
+            ArrayList<Atrakcja> atractions = MainActivity.activeTrip.getDays().get(day).getAttractions();
+            float color;
+            for (Atrakcja att : atractions) {
+                if (MainActivity.visitedAtractions.get(att.getNazwa())) {
+                    color = BitmapDescriptorFactory.HUE_GREEN;
+                } else {
+                    color = BitmapDescriptorFactory.HUE_RED;
+                }
                 mMap.addMarker(new MarkerOptions().position(new LatLng(att.getLatitude(),
                         att.getLongitude())).title(att.getNazwa()).icon(BitmapDescriptorFactory.defaultMarker(color)));
+            }
         }
     }
 
