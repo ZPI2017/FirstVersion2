@@ -18,6 +18,9 @@ public class Columns {
         public static final String TABLE_NAME_ATTRACTION_ID = "id_attraction";
         public static final String TABLE_NAME_NAME = "name";
         public static final String TABLE_NAME_LINK = "photo";
+        public static final String TABLE_NAME_DESCRIPTION = "description";
+        public static final String TABLE_NAME_LATITUDE = "latitude";
+        public static final String TABLE_NAME_LONGITUDE = "longitude";
     }
 
     public class TripColumns implements BaseColumns {

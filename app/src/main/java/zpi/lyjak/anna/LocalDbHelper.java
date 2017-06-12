@@ -15,8 +15,10 @@ public class LocalDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ATRACTIONS =
             "CREATE TABLE " + Columns.Attractions.TABLE_NAME + " (" + Columns.Attractions.TABLE_NAME_ATTRACTION_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT, " + Columns.Attractions.TABLE_NAME_LINK + " TEXT, "
-            + Columns.Attractions.TABLE_NAME + " TEXT)";
+            + " INTEGER PRIMARY KEY AUTOINCREMENT, " + Columns.Attractions.TABLE_NAME_LATITUDE + " TEXT, "
+            + Columns.Attractions.TABLE_NAME_LONGITUDE + " TEXT, " + Columns.Attractions.TABLE_NAME_NAME + " TEXT, "
+            + Columns.Attractions.TABLE_NAME_DESCRIPTION + " TEXT, " + Columns.Attractions.TABLE_NAME_LINK + " TEXT, "
+            + Columns.Attractions.TABLE_NAME_LINK + " TEXT)";
     private static final String SQL_CREATE_DAYS =
             "CREATE TABLE " + Columns.DayOfTrip.TABLE_NAME + " (" + Columns.DayOfTrip.TABLE_NAME_DAY_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT, " + Columns.DayOfTrip.TABLE_NAME_DATE + " TEXT, "
