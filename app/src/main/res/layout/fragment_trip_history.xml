@@ -16,7 +16,7 @@
         android:textColor="@color/cardview_light_background"
         android:textSize="22sp" />
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/tripHistoryList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
