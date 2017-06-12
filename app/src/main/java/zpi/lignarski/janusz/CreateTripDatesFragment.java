@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import zpi.lyjak.anna.firstversion.R;
 
@@ -48,7 +49,7 @@ public class CreateTripDatesFragment extends Fragment {
     View.OnClickListener dateListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ((OnDateInputSelectedListener)mContext).onDateInputSelected(v);
+            ((CreateTripDatesListener)mContext).onDateInputSelected(v);
         }
     };
 
@@ -68,10 +69,10 @@ public class CreateTripDatesFragment extends Fragment {
                 else {
                     if (!((CheckBox)getView().findViewById(R.id.checkBoxPlanAut)).isChecked()) {
                         Toast.makeText(getActivity(), "Utworzono nową wycieczkę!", Toast.LENGTH_LONG).show();
-                        //TODO zrobić przejście do mapy w kontekscie nowej wycieczki
+                        ((CreateTripDatesListener)mContext).createTripDatesEnd(df.parse(start), df.parse(end));
                     }
                     else {
-                        ((CreateTripDatesContinueListener)mContext).createTripDatesContinue(start, end);
+                        ((CreateTripDatesListener)mContext).createTripDatesContinue(df.parse(start), df.parse(end));
                     }
                 }
             } catch (ParseException e) {
@@ -80,11 +81,10 @@ public class CreateTripDatesFragment extends Fragment {
         }
     };
 
-    public interface OnDateInputSelectedListener {
-        void onDateInputSelected(View v);
-    }
 
-    public interface CreateTripDatesContinueListener {
-        void createTripDatesContinue(String startDate, String endDate);
+    public interface CreateTripDatesListener {
+        void createTripDatesContinue(Date startDate, Date endDate);
+        void onDateInputSelected(View v);
+        void createTripDatesEnd(Date startDate, Date endDate);
     }
 }

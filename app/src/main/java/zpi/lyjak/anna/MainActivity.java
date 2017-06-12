@@ -27,6 +27,7 @@ import yalantis.com.sidemenu.util.ViewAnimator;
 import zpi.lignarski.janusz.CreateTripActivity;
 import zpi.mazurek.tomasz.firstversion.ActiveTripActivity;
 import zpi.mazurek.tomasz.firstversion.RecomendedTrips;
+import zpi.mazurek.tomasz.firstversion.Trip;
 import zpi.mazurek.tomasz.firstversion.TripHistoryActivity;
 import zpi.lyjak.anna.firstversion.R;
 import zpi.lyjak.anna.fragments.ExampleFragment;
@@ -36,6 +37,8 @@ import zpi.szymala.kasia.firstversion.ShowAtrakcje;
  * @author Anna Łyjak
  */
 public class MainActivity extends AppCompatActivity implements ViewAnimator.ViewAnimatorListener {
+
+    public static Trip activeTrip;
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;

@@ -1,7 +1,9 @@
 package zpi.mazurek.tomasz.firstversion;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -26,16 +29,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import zpi.lignarski.janusz.DatePickerFragment;
 import zpi.lignarski.janusz.ImageLoadTask;
+import zpi.lyjak.anna.DayOfTrip;
+import zpi.lyjak.anna.MainActivity;
 import zpi.lyjak.anna.firstversion.R;
 
-public class RecomendedTrips extends AppCompatActivity {
+public class RecomendedTrips extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     ArrayList<BaseTrip> trips;
     RecomendedTripAdapter mAdapter;
+    public BaseTrip chosenTrip;
+    public Trip newTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +59,6 @@ public class RecomendedTrips extends AppCompatActivity {
         list.setLayoutManager(mLayoutManager);
         list.setItemAnimator(new DefaultItemAnimator());
         list.setAdapter(mAdapter);
-
     }
 
     private void prepareTrips() {
@@ -69,6 +77,31 @@ public class RecomendedTrips extends AppCompatActivity {
                 Toast.makeText(RecomendedTrips.this, "Coś się z bało", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+        newTrip = new Trip();
+        newTrip.setStartDate(calendar);
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.set(year, month, (int) (dayOfMonth+chosenTrip.getEstimatedTime()-1));
+        newTrip.setEndDate(calendarEnd);
+
+        //TODO być może dodać ajdik
+
+        chosenTrip.buildTripDays(calendar, this);
+    }
+
+    public void finishCreating(ArrayList<DayOfTrip> days) {
+        newTrip.setDays(days);
+
+        //TODO mamy gotową wycieczkę
+        MainActivity.activeTrip = newTrip;
+
+        Toast.makeText(this, "Zaimportowano wycieczkę", Toast.LENGTH_LONG).show();
+        finish();
     }
 }
 
@@ -131,6 +164,8 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
                 holder.att2.setText(trip.getAttractions().get(iterator.next()).get("nazwa"));
                 break;
         }
+//
+//        holder.itemView.setLongClickable(true);
 
     }
 
@@ -139,7 +174,7 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
         return trips.size();
     }
 
-    public class ViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder2 extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
         TextView name, att0, att1, att2;
         CardView card;
         ImageView cover;
@@ -154,6 +189,7 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
             att2 = (TextView) tripCell.findViewById(R.id.attraction2);
             card = (CardView) tripCell.findViewById(R.id.card_view);
             card.setOnClickListener(this);
+            card.setOnLongClickListener(this);
             
         }
         @Override
@@ -163,6 +199,15 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
             Intent intent = new Intent(context, TripOnMapActivity.class);
             intent.putExtra("map", map);
             context.startActivity(intent);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            ((RecomendedTrips) context).chosenTrip = trips.get(getAdapterPosition());
+            DialogFragment fragment = new DatePickerFragment();
+            fragment.show(((AppCompatActivity)context).getSupportFragmentManager(), "datePicker");
+            Toast.makeText(context, "Wybierz datę rozpoczęcia", Toast.LENGTH_LONG).show();
+            return true;
         }
     }
 }

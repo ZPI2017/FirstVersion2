@@ -13,7 +13,7 @@ import zpi.szymala.kasia.firstversion.Atrakcja;
 
 public class Trip {
 
-    private final Calendar startDate;
+    private Calendar startDate;
     private Calendar endDate;
     private boolean isFinished;
 
@@ -34,7 +34,7 @@ public class Trip {
         name = "Wycieczka";
         isFinished = false;
         endDate = null;
-        startDate = Calendar.getInstance();
+        setStartDate(Calendar.getInstance());
         attractions = new ArrayList<>();
     }
 
@@ -43,7 +43,7 @@ public class Trip {
         this.name = name;
         isFinished = false;
         endDate = null;
-        startDate = Calendar.getInstance();
+        setStartDate(Calendar.getInstance());
         attractions = new ArrayList<>();
     }
 
@@ -130,5 +130,24 @@ public class Trip {
 
     public void setAttractions(ArrayList<Atrakcja> attractions) {
         this.attractions = attractions;
+    }
+
+    public void setStartDate(Calendar startDate) {
+        this.startDate = startDate;
+    }
+
+    public int countAttractions() {
+        int counter = 0;
+        for (DayOfTrip day : getDays())
+            counter += day.getAttractions().size();
+        return counter;
+    }
+
+    public ArrayList<DayOfTrip> getDays() {
+        return days;
+    }
+
+    public void setDays(ArrayList<DayOfTrip> days) {
+        this.days = days;
     }
 }
