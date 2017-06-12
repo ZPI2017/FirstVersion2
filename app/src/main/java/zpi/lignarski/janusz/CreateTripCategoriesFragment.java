@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +27,8 @@ import zpi.lyjak.anna.firstversion.R;
 
 public class CreateTripCategoriesFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private CreateTripCategoriesListener mListener;
+    CreateTripCategoriesAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,17 +38,19 @@ public class CreateTripCategoriesFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        Button button = (Button) getView().findViewById(R.id.button);
+        button.setOnClickListener(buttonListener);
         final ListView listView = (ListView) getView().findViewById(R.id.listViewCreateTripCat);
-        final List<String> cats = new ArrayList<>();
+        final List<Category> cats = new ArrayList<>();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 cats.clear();
                 for (DataSnapshot category : dataSnapshot.getChildren()) {
-                    cats.add(category.child("name").getValue().toString());
+                    cats.add(category.getValue(Category.class));
                 }
-                listView.setAdapter(new CreateTripCategoriesAdapter(getContext(), cats));
+                listView.setAdapter(mAdapter = new CreateTripCategoriesAdapter(getContext(), cats));
             }
 
             @Override
@@ -53,20 +58,20 @@ public class CreateTripCategoriesFragment extends Fragment {
                 Toast.makeText(getContext(), "Coś się z bało", Toast.LENGTH_SHORT).show();
             }
         });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckBox checkBox = (CheckBox)view.findViewById(R.id.checkBox);
-                checkBox.setChecked(!checkBox.isChecked());
-            }
-        });
     }
+
+    private View.OnClickListener buttonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mListener.onTripCategoriesContinue(mAdapter.getCheckedCategories(), ((RadioButton) getView().findViewById(R.id.radioSlow)).isChecked());
+        }
+    };
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof CreateTripCategoriesListener) {
+            mListener = (CreateTripCategoriesListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -79,9 +84,8 @@ public class CreateTripCategoriesFragment extends Fragment {
 //        mListener = null;
 //    }
 
-    public interface OnFragmentInteractionListener {
-        void onTripCategoriesContinue();
-        //TODO przkazać odpowiednio zaznaczone
+    public interface CreateTripCategoriesListener {
+        void onTripCategoriesContinue(ArrayList<Category> categories, boolean slow);
     }
 
 }
