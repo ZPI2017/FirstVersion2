@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 import zpi.lyjak.anna.DayOfTrip;
@@ -142,12 +143,14 @@ public class CreateTripActivity extends AppCompatActivity
     }
 
     private ArrayList<DayOfTrip> randomTrip(ArrayList<DayOfTrip> dni, ArrayList<Atrakcja> atrakcje, boolean powoli) {
+        MainActivity.visitedAtractions = new HashMap<>();
         int ilosc = powoli?3:5;
         ArrayList<Atrakcja> temp = (ArrayList<Atrakcja>) atrakcje.clone();
         Random random = new Random();
         for (int i = 0; i <dni.size() && !atrakcje.isEmpty(); i++) {
             for (int j = 0; j < ilosc && !atrakcje.isEmpty(); j++) {
                 dni.get(i).getAttractions().add(atrakcje.remove(random.nextInt(atrakcje.size())));
+                MainActivity.visitedAtractions.put(dni.get(i).getAttractions().get(dni.get(i).getAttractions().size()-1).getNazwa(), false);
             }
         }
         return dni;
