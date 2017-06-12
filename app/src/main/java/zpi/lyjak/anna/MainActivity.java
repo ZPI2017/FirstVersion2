@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
 
     public static Trip activeTrip;
     public static HashMap<String, Boolean> visitedAtractions;
+    public static ArrayList<Trip> tripHistory;
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -55,6 +56,23 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //Statyczne dane do prezentacji
+
+        tripHistory = new ArrayList<>();
+        Trip tripExample = new Trip();
+        tripExample.endTrip();
+        tripExample.setRate(3);
+        Trip tripExample2 = new Trip();
+        tripExample2.endTrip();
+        tripExample.setRate(5);
+        tripExample.addAttraction(new Atrakcja("Hala Stulecia", "", ""));
+        tripExample.addAttraction(new Atrakcja("Zoo", "", ""));
+        tripExample.addAttraction(new Atrakcja("Stadion Olimpijski", "", ""));
+
+        MainActivity.tripHistory.add(tripExample);
+        MainActivity.tripHistory.add(tripExample2);
 
         contentFragment = ExampleFragment.newInstance(R.drawable.start_layout);
         getSupportFragmentManager().beginTransaction()

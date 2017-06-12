@@ -235,7 +235,7 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
     {
         final Dialog rankDialog = new Dialog(ActiveTripActivity.this, R.style.FullHeightDialog);
         rankDialog.setContentView(R.layout.rank_dialog);
-        RatingBar ratingBar = (RatingBar)rankDialog.findViewById(R.id.new_trip_rate);
+        final RatingBar ratingBar = (RatingBar)rankDialog.findViewById(R.id.new_trip_rate);
         ratingBar.setEnabled(true);
 
         Button yes = (Button) rankDialog.findViewById(R.id.yes_button);
@@ -243,6 +243,13 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
                 isTripOn = false;
+                MainActivity.activeTrip.endTrip();
+                MainActivity.tripHistory.add(MainActivity.activeTrip);
+                MainActivity.tripHistory.get(MainActivity.tripHistory.size()-1).setRate((int)ratingBar.getRating());
+                for(int i = 0; i < MainActivity.activeTrip.getDays().size(); i++)
+                {
+                    MainActivity.tripHistory.get(MainActivity.tripHistory.size()-1).setAttractions(MainActivity.activeTrip.getDays().get(i).getAttractions());
+                }
                 MainActivity.activeTrip = null;
                 mMap.clear();
                 setButtonText();

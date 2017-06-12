@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import zpi.lyjak.anna.MainActivity;
 import zpi.lyjak.anna.firstversion.R;
 import zpi.szymala.kasia.firstversion.Atrakcja;
 
@@ -38,16 +39,9 @@ public class TripHistoryActivity extends AppCompatActivity {
 
         //Przykładowe wartości do prezentacji
 
-        trips = new Trip[2];
-        trips[0] = new Trip();
-        trips[0].endTrip();
-        trips[0].setRate(3);
-        trips[1] = new Trip();
-        trips[1].endTrip();
-        trips[1].setRate(5);
-        trips[0].attractions.add(new Atrakcja("Hala Stulecia", "", ""));
-        trips[0].attractions.add(new Atrakcja("Zoo", "", ""));
-        trips[0].attractions.add(new Atrakcja("Stadion Olimpijski", "", ""));
+
+
+        trips = MainActivity.tripHistory.toArray(new Trip[MainActivity.tripHistory.size()]);
 
 
         lv = (ExpandableListView) this.findViewById(R.id.tripHistoryList);
