@@ -90,7 +90,7 @@ public class TripOnMapActivity extends AppCompatActivity {
                 b.putString("attId", marker.getTag().toString());
                 fragment.setArguments(b);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.yripOnMapLayout, fragment);
+                transaction.replace(R.id.activeTripLayout, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
