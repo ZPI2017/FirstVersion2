@@ -22,7 +22,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
+import zpi.lyjak.anna.DayOfTrip;
 import zpi.lyjak.anna.MainActivity;
 import zpi.lyjak.anna.firstversion.R;
 import zpi.mazurek.tomasz.firstversion.Trip;
@@ -93,11 +95,23 @@ public class CreateTripActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTripCategoriesContinue(ArrayList<Category> categories, boolean powoli) {
-        ValueEventListener listener = new ValueEventListener() {
+    public void onTripCategoriesContinue(final ArrayList<Category> categories, final boolean powoli) {
+        final ArrayList<Atrakcja> atrakcje = new ArrayList<>();
+        final ValueEventListener listener = new ValueEventListener() {
+            private final Object lock = new Object();
+            int i = categories.size();
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(CreateTripActivity.this, Long.toString(dataSnapshot.getChildrenCount()), Toast.LENGTH_LONG).show();
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    synchronized (atrakcje) {
+                        atrakcje.add(child.getValue(Atrakcja.class));
+                    }
+                }
+                synchronized (lock) {
+                    i--;
+                    if (i == 0)
+                        buildNewTrip(atrakcje, powoli);
+                }
             }
 
             @Override
@@ -110,5 +124,32 @@ public class CreateTripActivity extends AppCompatActivity
             Query query = mDatabase.child("places").orderByChild("kategoria").startAt(category.getId()).endAt(category.getId());
             query.addListenerForSingleValueEvent(listener);
         }
+    }
+
+    private void buildNewTrip(ArrayList<Atrakcja> atrakcje, boolean powoli) {
+        int numOfDays = nowaWycieczka.countDays();
+        ArrayList<DayOfTrip> dni = new ArrayList<>();
+        for (int i = 0; i < numOfDays; i++) {
+            DayOfTrip day = new DayOfTrip();
+            day.setAttractions(new ArrayList<Atrakcja>());
+            dni.add(day);
+        }
+        nowaWycieczka.setDays(randomTrip(dni, atrakcje, powoli));
+        Toast.makeText(this, "Wygenerowano wycieczkę! Liczba atrakcji: " + nowaWycieczka.countAttractions(), Toast.LENGTH_SHORT).show();
+
+        MainActivity.activeTrip = nowaWycieczka;
+        finish();
+    }
+
+    private ArrayList<DayOfTrip> randomTrip(ArrayList<DayOfTrip> dni, ArrayList<Atrakcja> atrakcje, boolean powoli) {
+        int ilosc = powoli?3:5;
+        ArrayList<Atrakcja> temp = (ArrayList<Atrakcja>) atrakcje.clone();
+        Random random = new Random();
+        for (int i = 0; i <dni.size() && !atrakcje.isEmpty(); i++) {
+            for (int j = 0; j < ilosc && !atrakcje.isEmpty(); j++) {
+                dni.get(i).getAttractions().add(atrakcje.remove(random.nextInt(atrakcje.size())));
+            }
+        }
+        return dni;
     }
 }
