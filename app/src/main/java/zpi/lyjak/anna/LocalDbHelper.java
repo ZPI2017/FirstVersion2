@@ -22,17 +22,18 @@ public class LocalDbHelper extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY AUTOINCREMENT, " + Columns.DayOfTrip.TABLE_NAME_DATE + " TEXT, "
             + Columns.DayOfTrip.TABLE_NAME_ATTRACTIONS + " TEXT)";
     private static final String SQL_CREATE_TRIPS =
-            "CREATE TABLE " + TripColumns.TABLE_NAME + " (" + TripColumns.COLUMN_NAME_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT, " +  TripColumns.TABLE_NAME + " TEXT, " + TripColumns.COLUMN_NAME_START
-            + " DATE, " + TripColumns.COLUMN_NAME_END + " TEXT, " + TripColumns.COLUMN_NAME_ATTRACTION + " TEXT, "
-            + TripColumns.COLUMN_NAME_DAYS + " TEXT)";
+            "CREATE TABLE " + Columns.TripColumns.TABLE_NAME + " (" + Columns.TripColumns.COLUMN_NAME_ID
+            + " INTEGER PRIMARY KEY AUTOINCREMENT, " +  Columns.TripColumns.TABLE_NAME + " TEXT, " + Columns.TripColumns.COLUMN_NAME_START
+            + " DATE, " + Columns.TripColumns.COLUMN_NAME_END + " TEXT, " + Columns.TripColumns.COLUMN_NAME_ATTRACTION + " TEXT, "
+            + Columns.TripColumns.COLUMN_NAME_DAYS + " TEXT)";
 
     private static final String SQL_DELETE_ATRACTIONS =
             "DROP TABLE IF EXISTS " + Columns.Attractions.TABLE_NAME;
     private static final String SQL_DELETE_DAYS =
             "DROP TABLE IF EXISTS " + Columns.DayOfTrip.TABLE_NAME;
     private static final String SQL_DELETE_TRIPS =
-            "DROP TABLE IF EXISTS " + TripColumns.TABLE_NAME;
+            "DROP TABLE IF EXISTS " + Columns.TripColumns.TABLE_NAME;
+
     public LocalDbHelper(Context context) {
         super(context, DATEBASE_NAME, null, DATEBASE_VERSION);
     }

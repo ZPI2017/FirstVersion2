@@ -19,4 +19,14 @@ public class Columns {
         public static final String TABLE_NAME_NAME = "name";
         public static final String TABLE_NAME_LINK = "photo";
     }
+
+    public class TripColumns implements BaseColumns {
+        public static final String TABLE_NAME = "Trips";
+        public static final String COLUMN_NAME_ID = "id_trip";
+        public static final String COLUMN_NAME_START = "start";
+        public static final String COLUMN_NAME_END = "end";
+        public static final String COLUMN_NAME_ATTRACTION = "id_main_attraction";
+        public static final String COLUMN_NAME_DAYS = "days";
+        public static final String COLUMN_NAME_ENDED = "isEnded";
+    }
 }
