@@ -61,6 +61,11 @@ public class Trip {
         isFinished = true;
     }
 
+    public Calendar getStartDateCalendar()
+    {
+        return startDate;
+    }
+
     public String getStartDate()
     {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");

@@ -102,13 +102,14 @@ public class RecomendedTrips extends AppCompatActivity implements DatePickerDial
 
         //TODO mamy gotową wycieczkę
 
-        //TODO Otrzymana wycieczka nie importuje atrakcji
-        
         MainActivity.activeTrip = newTrip;
         MainActivity.visitedAtractions = new HashMap<>();
 
-        for (Atrakcja att: newTrip.getAttractions()) {
-            MainActivity.visitedAtractions.put(att.getNazwa(), false);
+        for (DayOfTrip day: newTrip.getDays()) {
+            for(Atrakcja att: day.getAttractions())
+            {
+                MainActivity.visitedAtractions.put(att.getNazwa(), false);
+            }
         }
 
         Toast.makeText(this, "Zaimportowano wycieczkę", Toast.LENGTH_LONG).show();

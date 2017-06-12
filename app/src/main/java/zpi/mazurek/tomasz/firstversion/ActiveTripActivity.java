@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import zpi.lignarski.janusz.CreateTripActivity;
 import zpi.lyjak.anna.MainActivity;
@@ -51,6 +52,7 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private boolean isTripOn;
+    private int day;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,9 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
         changeButton = (Button) findViewById(R.id.visited);
         changeButton.setVisibility(View.INVISIBLE);
         changeButton.setClickable(false);
+
+        if(isTripOn)
+            whichDayOfTrip();
 
         setButtonText();
 
@@ -99,6 +104,8 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
     protected void onResume()
     {
         if(mMap != null) {
+            if(isTripOn)
+                whichDayOfTrip();
             addTripMarkes();
             setButtonText();
         }
@@ -199,7 +206,7 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
     public void addTripMarkes()
     {
         mMap.clear();
-        ArrayList<Atrakcja> atractions = MainActivity.activeTrip.getAttractions();
+        ArrayList<Atrakcja> atractions = MainActivity.activeTrip.getDays().get(day).getAttractions();
         float color;
         for (Atrakcja att: atractions)
         {
@@ -215,6 +222,14 @@ public class ActiveTripActivity extends FragmentActivity implements OnMapReadyCa
                         att.getLongitude())).title(att.getNazwa()).icon(BitmapDescriptorFactory.defaultMarker(color)));
         }
     }
+
+    public void whichDayOfTrip() {
+        Calendar start = MainActivity.activeTrip.getStartDateCalendar();
+        Calendar today = Calendar.getInstance();
+        long diffrence = today.getTimeInMillis() - start.getTimeInMillis();
+        day = (int) (diffrence / (1000 * 60 * 60 * 24));
+    }
+
 
     public void clickEnd()
     {
