@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -150,6 +151,7 @@ class RecomendedTripAdapter extends RecyclerView.Adapter<RecomendedTripAdapter.V
 
         BaseTrip trip = trips.get(position);
         holder.name.setText(trip.getName());
+        Picasso.with(context).load(trip.getPhotoURL()).placeholder( R.drawable.progress_animation ).into(holder.cover);
         new ImageLoadTask(trip.getPhotoURL(), holder.cover).execute();
         holder.rate.setRating(trip.getRate());
 

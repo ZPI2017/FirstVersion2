@@ -29,6 +29,7 @@ dependencies {
     compile('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
         transitive = true;
     }
+    compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.android.support:support-v4:25.0.1'
