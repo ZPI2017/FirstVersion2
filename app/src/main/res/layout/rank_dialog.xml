@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/wallet_highlighted_text_holo_light"
+    android:background="#9ec190"
     android:orientation="vertical">
 
     <Button
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:background="@color/cast_intro_overlay_button_background_color"
+        android:background="#6eb190"
         android:padding="2dp"
         android:text="Czy chcesz zakończyć wycieczkę?"
         android:textAlignment="center"
