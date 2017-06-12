@@ -92,7 +92,7 @@ public class Trip {
         if(!isFinished)
             result = "";
         else
-            result = tripTime/3600000 + "h " + tripTime%360000 + "m ";
+            result = (tripTime/3600000)%24 + "h " + (tripTime/60000) %60 + "m ";
         return result;
     }
 

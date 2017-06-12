@@ -63,9 +63,11 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         tripHistory = new ArrayList<>();
         Trip tripExample = new Trip();
         tripExample.endTrip();
+        tripExample.setName("Przykladowa wycieczka");
         tripExample.setRate(3);
         Trip tripExample2 = new Trip();
         tripExample2.endTrip();
+        tripExample2.setName("Zwiedzanie centrum");
         tripExample.setRate(5);
         tripExample.addAttraction(new Atrakcja("Hala Stulecia", "", ""));
         tripExample.addAttraction(new Atrakcja("Zoo", "", ""));

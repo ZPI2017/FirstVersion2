@@ -134,6 +134,9 @@ public class TripHistoryActivity extends AppCompatActivity {
             TextView endDate = (TextView) view.findViewById(R.id.end_date);
             endDate.setText("Koniec: " + getGroup(position).getEndDate());
 
+            TextView title = (TextView) view.findViewById(R.id.Title);
+            title.setText(getGroup(position).getName());
+
             RatingBar rating = (RatingBar) view.findViewById(R.id.trip_rate);
             rating.setRating(getGroup(position).getRate());
             return view;
