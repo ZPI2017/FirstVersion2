@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import zpi.lyjak.anna.MainActivity;
 import zpi.lyjak.anna.firstversion.R;
 import zpi.mazurek.tomasz.firstversion.Trip;
 import zpi.szymala.kasia.firstversion.Atrakcja;
@@ -63,6 +64,7 @@ public class CreateTripActivity extends AppCompatActivity
         nowaWycieczka.setEndDate(end);
 
         //TODO zapisać wycieczkę
+        MainActivity.activeTrip = nowaWycieczka;
 
         finish();
     }

@@ -36,6 +36,7 @@ import java.util.Iterator;
 import zpi.lignarski.janusz.DatePickerFragment;
 import zpi.lignarski.janusz.ImageLoadTask;
 import zpi.lyjak.anna.DayOfTrip;
+import zpi.lyjak.anna.MainActivity;
 import zpi.lyjak.anna.firstversion.R;
 
 public class RecomendedTrips extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -97,8 +98,9 @@ public class RecomendedTrips extends AppCompatActivity implements DatePickerDial
         newTrip.setDays(days);
 
         //TODO mamy gotową wycieczkę
+        MainActivity.activeTrip = newTrip;
 
-        Toast.makeText(this, "Zaimportowano wycieczkę" + newTrip.countAttractions(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Zaimportowano wycieczkę", Toast.LENGTH_LONG).show();
         finish();
     }
 }
